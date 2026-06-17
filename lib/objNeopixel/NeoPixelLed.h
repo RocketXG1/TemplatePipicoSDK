@@ -51,12 +51,14 @@ private:
     uint32_t colorToGRB(uint8_t red, uint8_t green, uint8_t blue) const;
     void sendPixel(uint32_t pixelColor) const;
     void loadPioProgramIfNeeded();
-    RgbColor scaleColor(const RgbColor& color, uint8_t intensity) const;
+    RgbColor blendColors(const RgbColor& startColor, const RgbColor& endColor, uint step, uint totalSteps) const;
+    RgbColor getSequenceColor(std::initializer_list<RgbColor> colors, uint step, uint totalSteps) const;
     void setSectionColor(
         uint startIndex,
         uint sectionLength,
         std::initializer_list<RgbColor> colors,
-        uint8_t intensity
+        uint step,
+        uint totalSteps
     );
 };
 
