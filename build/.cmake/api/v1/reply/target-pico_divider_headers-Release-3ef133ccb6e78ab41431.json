@@ -1,0 +1,62 @@
+{
+	"abstract" : true,
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"target_link_libraries"
+		],
+		"files" : 
+		[
+			"C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/common/pico_divider/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 2,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 4,
+				"parent" : 0
+			}
+		]
+	},
+	"codemodelVersion" : 
+	{
+		"major" : 2,
+		"minor" : 11
+	},
+	"id" : "pico_divider_headers::@eeb516375b43e35c2582",
+	"interfaceCompileDependencies" : 
+	[
+		{
+			"backtrace" : 2,
+			"id" : "pico_base_headers::@61888e1eac9d18a885a0"
+		}
+	],
+	"interfaceLinkLibraries" : 
+	[
+		{
+			"backtrace" : 2,
+			"id" : "pico_base_headers::@61888e1eac9d18a885a0"
+		}
+	],
+	"name" : "pico_divider_headers",
+	"paths" : 
+	{
+		"build" : "pico-sdk/src/common/pico_divider",
+		"source" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/common/pico_divider"
+	},
+	"sources" : [],
+	"type" : "INTERFACE_LIBRARY"
+}

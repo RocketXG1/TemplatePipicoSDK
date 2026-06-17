@@ -1,0 +1,93 @@
+{
+	"abstract" : true,
+	"backtrace" : 2,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"pico_define_boot_stage2",
+			"target_link_libraries",
+			"add_dependencies"
+		],
+		"files" : 
+		[
+			"C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/boot_stage2/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 101,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 74,
+				"parent" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 77,
+				"parent" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 78,
+				"parent" : 1
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 75,
+				"parent" : 1
+			}
+		]
+	},
+	"codemodelVersion" : 
+	{
+		"major" : 2,
+		"minor" : 11
+	},
+	"id" : "bs2_default_library::@bc554eaed616d198a22d",
+	"interfaceCompileDependencies" : 
+	[
+		{
+			"backtrace" : 4,
+			"id" : "boot_stage2_headers::@bc554eaed616d198a22d"
+		}
+	],
+	"interfaceLinkLibraries" : 
+	[
+		{
+			"backtrace" : 3,
+			"fragment" : "C:/Users/rocke/Dropbox/ADRIAN/MATERIAS/PiPico/SDK_Projects/Template/build/pico-sdk/src/rp2_common/boot_stage2/bs2_default_padded_checksummed.S"
+		},
+		{
+			"backtrace" : 4,
+			"id" : "boot_stage2_headers::@bc554eaed616d198a22d"
+		}
+	],
+	"name" : "bs2_default_library",
+	"orderDependencies" : 
+	[
+		{
+			"backtrace" : 5,
+			"id" : "bs2_default_padded_checksummed_asm::@bc554eaed616d198a22d"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "pico-sdk/src/rp2_common/boot_stage2",
+		"source" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/boot_stage2"
+	},
+	"sources" : [],
+	"type" : "INTERFACE_LIBRARY"
+}

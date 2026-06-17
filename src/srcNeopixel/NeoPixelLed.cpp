@@ -38,7 +38,7 @@ void NeoPixelLed::show() {
     for (uint index = 0; index < ledCount; ++index) {
         sendPixel(ledBuffer[index]);
     }
-    sleep_us(80);
+    sleep_us(85);
 }
 
 void NeoPixelLed::clear() {

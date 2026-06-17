@@ -1,0 +1,41 @@
+{
+	"abstract" : true,
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library"
+		],
+		"files" : 
+		[
+			"C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/common/pico_usb_reset_interface/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 2,
+				"parent" : 0
+			}
+		]
+	},
+	"codemodelVersion" : 
+	{
+		"major" : 2,
+		"minor" : 11
+	},
+	"id" : "pico_usb_reset_interface_headers::@5ae890b683d6c8f6f72c",
+	"name" : "pico_usb_reset_interface_headers",
+	"paths" : 
+	{
+		"build" : "pico-sdk/src/common/pico_usb_reset_interface",
+		"source" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/common/pico_usb_reset_interface"
+	},
+	"sources" : [],
+	"type" : "INTERFACE_LIBRARY"
+}

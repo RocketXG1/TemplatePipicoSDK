@@ -1,0 +1,96 @@
+{
+	"abstract" : true,
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"target_link_libraries"
+		],
+		"files" : 
+		[
+			"C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/pico_divider/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 17,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 22,
+				"parent" : 0
+			}
+		]
+	},
+	"codemodelVersion" : 
+	{
+		"major" : 2,
+		"minor" : 11
+	},
+	"id" : "pico_divider_hardware_explicit::@07fc49347ff7302362f1",
+	"interfaceCompileDependencies" : 
+	[
+		{
+			"backtrace" : 2,
+			"id" : "pico_divider_headers::@eeb516375b43e35c2582"
+		},
+		{
+			"backtrace" : 2,
+			"id" : "hardware_divider::@5112540209051185ae08"
+		},
+		{
+			"backtrace" : 2,
+			"id" : "hardware_regs::@993cf3edb526d4d3351b"
+		}
+	],
+	"interfaceLinkLibraries" : 
+	[
+		{
+			"backtrace" : 2,
+			"id" : "pico_divider_headers::@eeb516375b43e35c2582"
+		},
+		{
+			"backtrace" : 2,
+			"id" : "hardware_divider::@5112540209051185ae08"
+		},
+		{
+			"backtrace" : 2,
+			"id" : "hardware_regs::@993cf3edb526d4d3351b"
+		}
+	],
+	"interfaceSources" : 
+	[
+		{
+			"path" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/pico_divider/divider.S",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"name" : "pico_divider_hardware_explicit",
+	"paths" : 
+	{
+		"build" : "pico-sdk/src/rp2_common/pico_divider",
+		"source" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/pico_divider"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"interfaceSourceIndexes" : 
+			[
+				0
+			],
+			"name" : "",
+			"sourceIndexes" : []
+		}
+	],
+	"sources" : [],
+	"type" : "INTERFACE_LIBRARY"
+}

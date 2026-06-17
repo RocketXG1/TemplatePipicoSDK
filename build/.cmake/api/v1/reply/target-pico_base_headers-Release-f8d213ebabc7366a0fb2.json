@@ -1,0 +1,70 @@
+{
+	"abstract" : true,
+	"backtrace" : 2,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"pico_add_library",
+			"target_link_libraries"
+		],
+		"files" : 
+		[
+			"C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/CMakeLists.txt",
+			"C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/common/pico_base/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 2,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 94,
+				"parent" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 9,
+				"parent" : 0
+			}
+		]
+	},
+	"codemodelVersion" : 
+	{
+		"major" : 2,
+		"minor" : 11
+	},
+	"id" : "pico_base_headers::@61888e1eac9d18a885a0",
+	"interfaceCompileDependencies" : 
+	[
+		{
+			"backtrace" : 3,
+			"id" : "pico_platform_headers::@e055dca483e8b9f5cdea"
+		}
+	],
+	"interfaceLinkLibraries" : 
+	[
+		{
+			"backtrace" : 3,
+			"id" : "pico_platform_headers::@e055dca483e8b9f5cdea"
+		}
+	],
+	"name" : "pico_base_headers",
+	"paths" : 
+	{
+		"build" : "pico-sdk/src/common/pico_base",
+		"source" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/common/pico_base"
+	},
+	"sources" : [],
+	"type" : "INTERFACE_LIBRARY"
+}

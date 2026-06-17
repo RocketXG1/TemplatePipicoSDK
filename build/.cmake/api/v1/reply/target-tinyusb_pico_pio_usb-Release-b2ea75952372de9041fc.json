@@ -1,0 +1,179 @@
+{
+	"abstract" : true,
+	"backtrace" : 6,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"check_and_add_pico_pio_usb_support",
+			"include",
+			"target_link_libraries",
+			"add_dependencies",
+			"pico_generate_pio_header"
+		],
+		"files" : 
+		[
+			"C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/lib/tinyusb/hw/bsp/rp2040/family.cmake",
+			"C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/lib/tinyusb/hw/bsp/family_support.cmake",
+			"C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/tinyusb/CMakeLists.txt",
+			"C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/tools/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 2
+			},
+			{
+				"command" : 2,
+				"file" : 2,
+				"line" : 24,
+				"parent" : 0
+			},
+			{
+				"file" : 1,
+				"parent" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 134,
+				"parent" : 2
+			},
+			{
+				"file" : 0,
+				"parent" : 3
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 240,
+				"parent" : 4
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 202,
+				"parent" : 5
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 221,
+				"parent" : 5
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 231,
+				"parent" : 5
+			},
+			{
+				"command" : 4,
+				"file" : 3,
+				"line" : 45,
+				"parent" : 8
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 232,
+				"parent" : 5
+			},
+			{
+				"command" : 4,
+				"file" : 3,
+				"line" : 45,
+				"parent" : 10
+			}
+		]
+	},
+	"codemodelVersion" : 
+	{
+		"major" : 2,
+		"minor" : 11
+	},
+	"id" : "tinyusb_pico_pio_usb::@36e52159cb4e937c58c5",
+	"interfaceCompileDependencies" : 
+	[
+		{
+			"backtrace" : 7,
+			"id" : "hardware_dma::@0fb4e5fe7d96da9dd1e8"
+		},
+		{
+			"backtrace" : 7,
+			"id" : "hardware_pio::@e01f79172179c7736f7b"
+		},
+		{
+			"backtrace" : 7,
+			"id" : "pico_multicore::@9a13c1d01dbacaad7b33"
+		}
+	],
+	"interfaceLinkLibraries" : 
+	[
+		{
+			"backtrace" : 7,
+			"id" : "hardware_dma::@0fb4e5fe7d96da9dd1e8"
+		},
+		{
+			"backtrace" : 7,
+			"id" : "hardware_pio::@e01f79172179c7736f7b"
+		},
+		{
+			"backtrace" : 7,
+			"id" : "pico_multicore::@9a13c1d01dbacaad7b33"
+		}
+	],
+	"interfaceSources" : 
+	[
+		{
+			"path" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/lib/tinyusb/hw/mcu/raspberry_pi/Pico-PIO-USB/src/pio_usb.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"path" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/lib/tinyusb/hw/mcu/raspberry_pi/Pico-PIO-USB/src/pio_usb_host.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"path" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/lib/tinyusb/hw/mcu/raspberry_pi/Pico-PIO-USB/src/pio_usb_device.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"path" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/lib/tinyusb/hw/mcu/raspberry_pi/Pico-PIO-USB/src/usb_crc.c",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"name" : "tinyusb_pico_pio_usb",
+	"orderDependencies" : 
+	[
+		{
+			"backtrace" : 9,
+			"id" : "tinyusb_pico_pio_usb_usb_tx_pio_h::@36e52159cb4e937c58c5"
+		},
+		{
+			"backtrace" : 11,
+			"id" : "tinyusb_pico_pio_usb_usb_rx_pio_h::@36e52159cb4e937c58c5"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "pico-sdk/src/rp2_common/tinyusb",
+		"source" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/tinyusb"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"interfaceSourceIndexes" : 
+			[
+				0,
+				1,
+				2,
+				3
+			],
+			"name" : "Source Files",
+			"sourceIndexes" : []
+		}
+	],
+	"sources" : [],
+	"type" : "INTERFACE_LIBRARY"
+}

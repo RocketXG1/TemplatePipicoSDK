@@ -1,0 +1,129 @@
+{
+	"abstract" : true,
+	"backtrace" : 2,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"pico_add_library",
+			"target_link_libraries",
+			"pico_mirrored_target_link_libraries"
+		],
+		"files" : 
+		[
+			"C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/CMakeLists.txt",
+			"C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/pico_cyw43_driver/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 76,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 94,
+				"parent" : 1
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 83,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 48,
+				"parent" : 3
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 48,
+				"parent" : 3
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 48,
+				"parent" : 3
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 48,
+				"parent" : 3
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 48,
+				"parent" : 3
+			}
+		]
+	},
+	"codemodelVersion" : 
+	{
+		"major" : 2,
+		"minor" : 11
+	},
+	"id" : "pico_btstack_cyw43_headers::@c2fb4f534018e64680d5",
+	"interfaceCompileDependencies" : 
+	[
+		{
+			"backtrace" : 4,
+			"id" : "pico_btstack_base_headers::@ea60c734c83cae3783be"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "pico_btstack_flash_bank_headers::@ea60c734c83cae3783be"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "pico_btstack_run_loop_async_context_headers::@ea60c734c83cae3783be"
+		},
+		{
+			"backtrace" : 8,
+			"id" : "pico_btstack_hci_transport_cyw43_headers::@c2fb4f534018e64680d5"
+		}
+	],
+	"interfaceLinkLibraries" : 
+	[
+		{
+			"backtrace" : 4,
+			"id" : "pico_btstack_base_headers::@ea60c734c83cae3783be"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "pico_btstack_flash_bank_headers::@ea60c734c83cae3783be"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "pico_btstack_run_loop_async_context_headers::@ea60c734c83cae3783be"
+		},
+		{
+			"backtrace" : 7,
+			"fragment" : "pico_cyw43_arch_headers"
+		},
+		{
+			"backtrace" : 8,
+			"id" : "pico_btstack_hci_transport_cyw43_headers::@c2fb4f534018e64680d5"
+		}
+	],
+	"name" : "pico_btstack_cyw43_headers",
+	"paths" : 
+	{
+		"build" : "pico-sdk/src/rp2_common/pico_cyw43_driver",
+		"source" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/pico_cyw43_driver"
+	},
+	"sources" : [],
+	"type" : "INTERFACE_LIBRARY"
+}

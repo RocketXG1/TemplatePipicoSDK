@@ -1,0 +1,105 @@
+{
+	"abstract" : true,
+	"backtrace" : 2,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"pico_add_library",
+			"target_link_libraries",
+			"pico_mirrored_target_link_libraries"
+		],
+		"files" : 
+		[
+			"C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/CMakeLists.txt",
+			"C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/pico_standard_link/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 2,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 94,
+				"parent" : 1
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 17,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 48,
+				"parent" : 3
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 48,
+				"parent" : 3
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 48,
+				"parent" : 3
+			}
+		]
+	},
+	"codemodelVersion" : 
+	{
+		"major" : 2,
+		"minor" : 11
+	},
+	"id" : "pico_standard_link_headers::@128212700d4d2b2d40a9",
+	"interfaceCompileDependencies" : 
+	[
+		{
+			"backtrace" : 4,
+			"id" : "hardware_regs_headers::@993cf3edb526d4d3351b"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "pico_bootrom_headers::@5b7a36be3eedb58ea3ff"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "pico_binary_info_headers::@2be179807169b375a57c"
+		}
+	],
+	"interfaceLinkLibraries" : 
+	[
+		{
+			"backtrace" : 4,
+			"id" : "hardware_regs_headers::@993cf3edb526d4d3351b"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "pico_bootrom_headers::@5b7a36be3eedb58ea3ff"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "pico_binary_info_headers::@2be179807169b375a57c"
+		}
+	],
+	"name" : "pico_standard_link_headers",
+	"paths" : 
+	{
+		"build" : "pico-sdk/src/rp2_common/pico_standard_link",
+		"source" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/pico_standard_link"
+	},
+	"sources" : [],
+	"type" : "INTERFACE_LIBRARY"
+}

@@ -1,0 +1,84 @@
+{
+	"abstract" : true,
+	"backtrace" : 2,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"pico_add_impl_library",
+			"target_link_libraries"
+		],
+		"files" : 
+		[
+			"C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/CMakeLists.txt",
+			"C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/pico_bit_ops/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 3,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 79,
+				"parent" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 88,
+				"parent" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 15,
+				"parent" : 0
+			}
+		]
+	},
+	"codemodelVersion" : 
+	{
+		"major" : 2,
+		"minor" : 11
+	},
+	"id" : "pico_bit_ops::@29d4edaf53e96bb95837",
+	"interfaceCompileDependencies" : 
+	[
+		{
+			"backtrace" : 3,
+			"id" : "pico_bit_ops_headers::@b7c892648fcdf015e788"
+		},
+		{
+			"backtrace" : 4,
+			"id" : "pico_bit_ops_default::@29d4edaf53e96bb95837"
+		}
+	],
+	"interfaceLinkLibraries" : 
+	[
+		{
+			"backtrace" : 3,
+			"id" : "pico_bit_ops_headers::@b7c892648fcdf015e788"
+		},
+		{
+			"backtrace" : 4,
+			"id" : "pico_bit_ops_default::@29d4edaf53e96bb95837"
+		}
+	],
+	"name" : "pico_bit_ops",
+	"paths" : 
+	{
+		"build" : "pico-sdk/src/rp2_common/pico_bit_ops",
+		"source" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/pico_bit_ops"
+	},
+	"sources" : [],
+	"type" : "INTERFACE_LIBRARY"
+}

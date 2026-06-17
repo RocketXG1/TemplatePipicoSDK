@@ -1,0 +1,119 @@
+{
+	"abstract" : true,
+	"backtrace" : 2,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"pico_add_library",
+			"target_link_libraries",
+			"pico_mirrored_target_link_libraries"
+		],
+		"files" : 
+		[
+			"C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/CMakeLists.txt",
+			"C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/pico_stdio_usb/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 2,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 94,
+				"parent" : 1
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 12,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 48,
+				"parent" : 3
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 48,
+				"parent" : 3
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 48,
+				"parent" : 3
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 48,
+				"parent" : 3
+			}
+		]
+	},
+	"codemodelVersion" : 
+	{
+		"major" : 2,
+		"minor" : 11
+	},
+	"id" : "pico_stdio_usb_headers::@f0a894bfaafd0a38d775",
+	"interfaceCompileDependencies" : 
+	[
+		{
+			"backtrace" : 4,
+			"id" : "pico_stdio_headers::@d2414feb1b3aa36aaee4"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "pico_time_headers::@ed071ba82cca6745b785"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "pico_unique_id_headers::@36eb7f981929521e7e8e"
+		},
+		{
+			"backtrace" : 7,
+			"id" : "pico_usb_reset_interface_headers::@5ae890b683d6c8f6f72c"
+		}
+	],
+	"interfaceLinkLibraries" : 
+	[
+		{
+			"backtrace" : 4,
+			"id" : "pico_stdio_headers::@d2414feb1b3aa36aaee4"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "pico_time_headers::@ed071ba82cca6745b785"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "pico_unique_id_headers::@36eb7f981929521e7e8e"
+		},
+		{
+			"backtrace" : 7,
+			"id" : "pico_usb_reset_interface_headers::@5ae890b683d6c8f6f72c"
+		}
+	],
+	"name" : "pico_stdio_usb_headers",
+	"paths" : 
+	{
+		"build" : "pico-sdk/src/rp2_common/pico_stdio_usb",
+		"source" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/pico_stdio_usb"
+	},
+	"sources" : [],
+	"type" : "INTERFACE_LIBRARY"
+}

@@ -8,19 +8,33 @@ int main() {
 
     NeoPixelLed statusStrip(
         16,
-        34,
+        1,
         pio0,
         0,
         false
     );
 
-    statusStrip.init();
+    NeoPixelLed LedStrip(
+        29,
+        100,
+        pio0,
+        1,
+        false
+    );
 
-    while (true) {
-        statusStrip.fbLedTransition(
+    statusStrip.init();
+    LedStrip.init();
+   while (true) {
+         statusStrip.setPixel(0,Colors::Cyan);
+         statusStrip.show();
+          
+
+          
+        
+        LedStrip.fbLedTransition(
             {
                 {
-                    4,
+                    25,
                     {
                         Colors::Red,
                         Colors::Blue,
@@ -29,7 +43,7 @@ int main() {
                     }
                 },
                 {
-                    8,
+                    25,
                     {
                         Colors::Blue,
                         Colors::Red,
@@ -37,14 +51,14 @@ int main() {
                     }
                 },
                 {
-                    2,
+                    25,
                     {
                         Colors::Red,
                         Colors::Green
                     }
                 },
                 {
-                    20,
+                    25,
                     {
                         Colors::Red,
                         Colors::Red,
@@ -55,22 +69,22 @@ int main() {
                     }
                 }
             },
-            1000
+            500
         );
 
         sleep_ms(500);
-        statusStrip.clear();
-        sleep_ms(500);
+        //LedStrip.clear();
+        
 
-        statusStrip.fbLedTransition(
+        LedStrip.fbLedTransition(
             {
-                {10, {Colors::Cyan, Colors::White}},
-                {12, {Colors::Violet, Colors::Magenta, Colors::Blue}},
-                {12, {Colors::Orange, Colors::Brown, Colors::Yellow}}
+                {80, {Colors::Cyan, Colors::White}},
+                {10, {Colors::Violet, Colors::Magenta, Colors::Blue}},
+                {10, {Colors::Orange, Colors::Brown, Colors::Yellow}}
             },
-            1200
+            5000
         );
 
         sleep_ms(750);
-    }
+    }    
 }

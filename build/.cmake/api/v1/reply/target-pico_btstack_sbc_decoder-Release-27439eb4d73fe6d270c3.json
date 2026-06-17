@@ -1,0 +1,165 @@
+{
+	"abstract" : true,
+	"backtrace" : 3,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"pico_add_impl_library",
+			"pico_add_library",
+			"target_link_libraries"
+		],
+		"files" : 
+		[
+			"C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/CMakeLists.txt",
+			"C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/pico_btstack/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 188,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 95,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 79,
+				"parent" : 2
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 88,
+				"parent" : 2
+			}
+		]
+	},
+	"codemodelVersion" : 
+	{
+		"major" : 2,
+		"minor" : 11
+	},
+	"id" : "pico_btstack_sbc_decoder::@ea60c734c83cae3783be",
+	"interfaceCompileDependencies" : 
+	[
+		{
+			"backtrace" : 4,
+			"id" : "pico_btstack_sbc_decoder_headers::@ea60c734c83cae3783be"
+		}
+	],
+	"interfaceLinkLibraries" : 
+	[
+		{
+			"backtrace" : 4,
+			"id" : "pico_btstack_sbc_decoder_headers::@ea60c734c83cae3783be"
+		}
+	],
+	"interfaceSources" : 
+	[
+		{
+			"path" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/lib/btstack/src/classic/btstack_sbc_decoder_bluedroid.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"path" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/lib/btstack/3rd-party/bluedroid/decoder/srce/alloc.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"path" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/lib/btstack/3rd-party/bluedroid/decoder/srce/bitalloc.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"path" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/lib/btstack/3rd-party/bluedroid/decoder/srce/bitalloc-sbc.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"path" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/lib/btstack/3rd-party/bluedroid/decoder/srce/bitstream-decode.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"path" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/lib/btstack/3rd-party/bluedroid/decoder/srce/decoder-oina.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"path" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/lib/btstack/3rd-party/bluedroid/decoder/srce/decoder-private.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"path" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/lib/btstack/3rd-party/bluedroid/decoder/srce/decoder-sbc.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"path" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/lib/btstack/3rd-party/bluedroid/decoder/srce/dequant.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"path" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/lib/btstack/3rd-party/bluedroid/decoder/srce/framing.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"path" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/lib/btstack/3rd-party/bluedroid/decoder/srce/framing-sbc.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"path" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/lib/btstack/3rd-party/bluedroid/decoder/srce/oi_codec_version.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"path" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/lib/btstack/3rd-party/bluedroid/decoder/srce/synthesis-sbc.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"path" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/lib/btstack/3rd-party/bluedroid/decoder/srce/synthesis-dct8.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"path" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/lib/btstack/3rd-party/bluedroid/decoder/srce/synthesis-8-generated.c",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"name" : "pico_btstack_sbc_decoder",
+	"paths" : 
+	{
+		"build" : "pico-sdk/src/rp2_common/pico_btstack",
+		"source" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/pico_btstack"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"interfaceSourceIndexes" : 
+			[
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14
+			],
+			"name" : "Source Files",
+			"sourceIndexes" : []
+		}
+	],
+	"sources" : [],
+	"type" : "INTERFACE_LIBRARY"
+}

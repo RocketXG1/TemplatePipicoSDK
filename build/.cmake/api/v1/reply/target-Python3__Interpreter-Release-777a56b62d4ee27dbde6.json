@@ -1,0 +1,81 @@
+{
+	"abstract" : true,
+	"artifacts" : 
+	[
+		{
+			"path" : "C:/Users/rocke/AppData/Local/Python/pythoncore-3.14-64/python.exe"
+		}
+	],
+	"backtrace" : 6,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_executable",
+			"include",
+			"find_package",
+			"pico_define_boot_stage2"
+		],
+		"files" : 
+		[
+			"C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/cmake/share/cmake-4.4/Modules/FindPython/Support.cmake",
+			"C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/cmake/share/cmake-4.4/Modules/FindPython3.cmake",
+			"C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/boot_stage2/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 2
+			},
+			{
+				"command" : 3,
+				"file" : 2,
+				"line" : 101,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 2,
+				"line" : 63,
+				"parent" : 1
+			},
+			{
+				"file" : 1,
+				"parent" : 2
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 684,
+				"parent" : 3
+			},
+			{
+				"file" : 0,
+				"parent" : 4
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 4393,
+				"parent" : 5
+			}
+		]
+	},
+	"codemodelVersion" : 
+	{
+		"major" : 2,
+		"minor" : 11
+	},
+	"id" : "Python3::Interpreter::@bc554eaed616d198a22d",
+	"imported" : true,
+	"local" : true,
+	"name" : "Python3::Interpreter",
+	"nameOnDisk" : "python.exe",
+	"paths" : 
+	{
+		"build" : "pico-sdk/src/rp2_common/boot_stage2",
+		"source" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/boot_stage2"
+	},
+	"sources" : [],
+	"type" : "EXECUTABLE"
+}

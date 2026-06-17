@@ -1,0 +1,119 @@
+{
+	"abstract" : true,
+	"backtrace" : 2,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"pico_add_library",
+			"target_link_libraries",
+			"pico_mirrored_target_link_libraries"
+		],
+		"files" : 
+		[
+			"C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/CMakeLists.txt",
+			"C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/pico_rand/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 1,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 94,
+				"parent" : 1
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 9,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 48,
+				"parent" : 3
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 48,
+				"parent" : 3
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 48,
+				"parent" : 3
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 48,
+				"parent" : 3
+			}
+		]
+	},
+	"codemodelVersion" : 
+	{
+		"major" : 2,
+		"minor" : 11
+	},
+	"id" : "pico_rand_headers::@4c79d50e28622b798e21",
+	"interfaceCompileDependencies" : 
+	[
+		{
+			"backtrace" : 4,
+			"id" : "pico_unique_id_headers::@36eb7f981929521e7e8e"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "hardware_clocks_headers::@252b8e5380721ae85cc3"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "hardware_timer_headers::@f60a61f0194575541685"
+		},
+		{
+			"backtrace" : 7,
+			"id" : "hardware_sync_headers::@786cdbe0562c81b78078"
+		}
+	],
+	"interfaceLinkLibraries" : 
+	[
+		{
+			"backtrace" : 4,
+			"id" : "pico_unique_id_headers::@36eb7f981929521e7e8e"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "hardware_clocks_headers::@252b8e5380721ae85cc3"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "hardware_timer_headers::@f60a61f0194575541685"
+		},
+		{
+			"backtrace" : 7,
+			"id" : "hardware_sync_headers::@786cdbe0562c81b78078"
+		}
+	],
+	"name" : "pico_rand_headers",
+	"paths" : 
+	{
+		"build" : "pico-sdk/src/rp2_common/pico_rand",
+		"source" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/pico_rand"
+	},
+	"sources" : [],
+	"type" : "INTERFACE_LIBRARY"
+}

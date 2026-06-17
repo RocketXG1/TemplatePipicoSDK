@@ -1,0 +1,176 @@
+{
+	"abstract" : true,
+	"backtrace" : 3,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"pico_simple_hardware_impl_target",
+			"pico_simple_hardware_target",
+			"target_link_libraries",
+			"pico_mirrored_target_link_libraries"
+		],
+		"files" : 
+		[
+			"C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/CMakeLists.txt",
+			"C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/hardware_irq/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 1,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 72,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 144,
+				"parent" : 2
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 150,
+				"parent" : 2
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 39,
+				"parent" : 4
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 49,
+				"parent" : 4
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 152,
+				"parent" : 2
+			},
+			{
+				"command" : 4,
+				"file" : 1,
+				"line" : 7,
+				"parent" : 0
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 39,
+				"parent" : 8
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 49,
+				"parent" : 8
+			}
+		]
+	},
+	"codemodelVersion" : 
+	{
+		"major" : 2,
+		"minor" : 11
+	},
+	"id" : "hardware_irq::@381ff19abb5cef8d2924",
+	"interfaceCompileDependencies" : 
+	[
+		{
+			"backtrace" : 5,
+			"id" : "hardware_irq_headers::@381ff19abb5cef8d2924"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "pico_platform::@e055dca483e8b9f5cdea"
+		},
+		{
+			"backtrace" : 7,
+			"id" : "hardware_claim::@615a7bcf689937b6383a"
+		},
+		{
+			"backtrace" : 9,
+			"id" : "hardware_irq_headers::@381ff19abb5cef8d2924"
+		},
+		{
+			"backtrace" : 10,
+			"id" : "pico_sync::@04b15b98fcb37c7b0422"
+		}
+	],
+	"interfaceLinkLibraries" : 
+	[
+		{
+			"backtrace" : 5,
+			"id" : "hardware_irq_headers::@381ff19abb5cef8d2924"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "pico_platform::@e055dca483e8b9f5cdea"
+		},
+		{
+			"backtrace" : 7,
+			"id" : "hardware_claim::@615a7bcf689937b6383a"
+		},
+		{
+			"backtrace" : 9,
+			"id" : "hardware_irq_headers::@381ff19abb5cef8d2924"
+		},
+		{
+			"backtrace" : 10,
+			"id" : "pico_sync::@04b15b98fcb37c7b0422"
+		}
+	],
+	"interfaceSources" : 
+	[
+		{
+			"path" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/hardware_irq/irq.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"path" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/hardware_irq/irq_handler_chain.S",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"name" : "hardware_irq",
+	"paths" : 
+	{
+		"build" : "pico-sdk/src/rp2_common/hardware_irq",
+		"source" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/hardware_irq"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"interfaceSourceIndexes" : 
+			[
+				0
+			],
+			"name" : "Source Files",
+			"sourceIndexes" : []
+		},
+		{
+			"interfaceSourceIndexes" : 
+			[
+				1
+			],
+			"name" : "",
+			"sourceIndexes" : []
+		}
+	],
+	"sources" : [],
+	"type" : "INTERFACE_LIBRARY"
+}

@@ -1,0 +1,293 @@
+{
+	"abstract" : true,
+	"backtrace" : 2,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"pico_add_library",
+			"target_link_libraries",
+			"pico_mirrored_target_link_libraries"
+		],
+		"files" : 
+		[
+			"C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/CMakeLists.txt",
+			"C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/pico_runtime/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 1,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 94,
+				"parent" : 1
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 9,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 48,
+				"parent" : 3
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 48,
+				"parent" : 3
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 48,
+				"parent" : 3
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 48,
+				"parent" : 3
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 48,
+				"parent" : 3
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 18,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 48,
+				"parent" : 9
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 21,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 48,
+				"parent" : 11
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 24,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 48,
+				"parent" : 13
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 27,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 48,
+				"parent" : 15
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 30,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 48,
+				"parent" : 17
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 33,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 48,
+				"parent" : 19
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 36,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 48,
+				"parent" : 21
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 39,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 48,
+				"parent" : 23
+			}
+		]
+	},
+	"codemodelVersion" : 
+	{
+		"major" : 2,
+		"minor" : 11
+	},
+	"id" : "pico_runtime_headers::@8bd1207636785ef5e642",
+	"interfaceCompileDependencies" : 
+	[
+		{
+			"backtrace" : 4,
+			"id" : "hardware_uart_headers::@6760ac481d50fbd80aa4"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "hardware_clocks_headers::@252b8e5380721ae85cc3"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "hardware_irq_headers::@381ff19abb5cef8d2924"
+		},
+		{
+			"backtrace" : 7,
+			"id" : "pico_printf_headers::@7ce8e26071a1a2a63905"
+		},
+		{
+			"backtrace" : 8,
+			"id" : "pico_sync_headers::@04b15b98fcb37c7b0422"
+		},
+		{
+			"backtrace" : 10,
+			"id" : "pico_bit_ops_headers::@b7c892648fcdf015e788"
+		},
+		{
+			"backtrace" : 12,
+			"id" : "pico_divider_headers::@eeb516375b43e35c2582"
+		},
+		{
+			"backtrace" : 14,
+			"id" : "pico_double_headers::@ab259a064a43323d6260"
+		},
+		{
+			"backtrace" : 16,
+			"id" : "pico_int64_ops_headers::@ab1ccc05594a9ba490cb"
+		},
+		{
+			"backtrace" : 18,
+			"id" : "pico_float_headers::@34bdbf50623dcb85eac7"
+		},
+		{
+			"backtrace" : 20,
+			"id" : "pico_malloc_headers::@4c8c2e90fff1e2188e9b"
+		},
+		{
+			"backtrace" : 22,
+			"id" : "pico_mem_ops_headers::@33009e7ae98248310cdb"
+		},
+		{
+			"backtrace" : 24,
+			"id" : "pico_standard_link_headers::@128212700d4d2b2d40a9"
+		}
+	],
+	"interfaceLinkLibraries" : 
+	[
+		{
+			"backtrace" : 4,
+			"id" : "hardware_uart_headers::@6760ac481d50fbd80aa4"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "hardware_clocks_headers::@252b8e5380721ae85cc3"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "hardware_irq_headers::@381ff19abb5cef8d2924"
+		},
+		{
+			"backtrace" : 7,
+			"id" : "pico_printf_headers::@7ce8e26071a1a2a63905"
+		},
+		{
+			"backtrace" : 8,
+			"id" : "pico_sync_headers::@04b15b98fcb37c7b0422"
+		},
+		{
+			"backtrace" : 10,
+			"id" : "pico_bit_ops_headers::@b7c892648fcdf015e788"
+		},
+		{
+			"backtrace" : 12,
+			"id" : "pico_divider_headers::@eeb516375b43e35c2582"
+		},
+		{
+			"backtrace" : 14,
+			"id" : "pico_double_headers::@ab259a064a43323d6260"
+		},
+		{
+			"backtrace" : 16,
+			"id" : "pico_int64_ops_headers::@ab1ccc05594a9ba490cb"
+		},
+		{
+			"backtrace" : 18,
+			"id" : "pico_float_headers::@34bdbf50623dcb85eac7"
+		},
+		{
+			"backtrace" : 20,
+			"id" : "pico_malloc_headers::@4c8c2e90fff1e2188e9b"
+		},
+		{
+			"backtrace" : 22,
+			"id" : "pico_mem_ops_headers::@33009e7ae98248310cdb"
+		},
+		{
+			"backtrace" : 24,
+			"id" : "pico_standard_link_headers::@128212700d4d2b2d40a9"
+		}
+	],
+	"name" : "pico_runtime_headers",
+	"paths" : 
+	{
+		"build" : "pico-sdk/src/rp2_common/pico_runtime",
+		"source" : "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk/src/rp2_common/pico_runtime"
+	},
+	"sources" : [],
+	"type" : "INTERFACE_LIBRARY"
+}
