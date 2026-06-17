@@ -84,7 +84,6 @@ void NeoPixelLed::fbLedTransition(
     const uint delayPerStepMs = steps > 0 ? transitionTimeMs / steps : 0;
 
     for (uint step = 0; step <= steps; ++step) {
-        const uint8_t intensity = static_cast<uint8_t>((255u * step) / steps);
         std::fill(std::begin(ledBuffer), std::begin(ledBuffer) + ledCount, colorToGRB(0, 0, 0));
 
         uint currentLed = 0;
@@ -98,7 +97,7 @@ void NeoPixelLed::fbLedTransition(
 
             const uint remainingLeds = ledCount - currentLed;
             const uint sectionLength = std::min(section.ledQuantity, remainingLeds);
-            setSectionColor(currentLed, sectionLength, section.colorSequence, intensity);
+            setSectionColor(currentLed, sectionLength, section.colorSequence, step, steps);
             currentLed += sectionLength;
         }
 
@@ -137,28 +136,71 @@ void NeoPixelLed::loadPioProgramIfNeeded() {
     programOffset = pio_add_program(pioBlock, &ws2812_program);
 }
 
-RgbColor NeoPixelLed::scaleColor(const RgbColor& color, uint8_t intensity) const {
+RgbColor NeoPixelLed::blendColors(
+    const RgbColor& startColor,
+    const RgbColor& endColor,
+    uint step,
+    uint totalSteps
+) const {
+    if (totalSteps == 0) {
+        return endColor;
+    }
+
     return {
-        static_cast<uint8_t>((static_cast<uint16_t>(color.red) * intensity) / 255u),
-        static_cast<uint8_t>((static_cast<uint16_t>(color.green) * intensity) / 255u),
-        static_cast<uint8_t>((static_cast<uint16_t>(color.blue) * intensity) / 255u)
+        static_cast<uint8_t>(
+            (static_cast<uint32_t>(startColor.red) * (totalSteps - step) +
+             static_cast<uint32_t>(endColor.red) * step) /
+            totalSteps
+        ),
+        static_cast<uint8_t>(
+            (static_cast<uint32_t>(startColor.green) * (totalSteps - step) +
+             static_cast<uint32_t>(endColor.green) * step) /
+            totalSteps
+        ),
+        static_cast<uint8_t>(
+            (static_cast<uint32_t>(startColor.blue) * (totalSteps - step) +
+             static_cast<uint32_t>(endColor.blue) * step) /
+            totalSteps
+        )
     };
+}
+
+RgbColor NeoPixelLed::getSequenceColor(
+    std::initializer_list<RgbColor> colors,
+    uint step,
+    uint totalSteps
+) const {
+    if (colors.size() == 0) {
+        return Colors::Off;
+    }
+    if (colors.size() == 1 || totalSteps == 0) {
+        return *colors.begin();
+    }
+
+    const uint segmentCount = colors.size() - 1;
+    const uint scaledStep = std::min(step, totalSteps) * segmentCount;
+    const uint segmentIndex = std::min(scaledStep / totalSteps, segmentCount - 1);
+    const uint segmentStep = scaledStep - (segmentIndex * totalSteps);
+    const RgbColor* startColor = colors.begin() + segmentIndex;
+    const RgbColor* endColor = startColor + 1;
+
+    return blendColors(*startColor, *endColor, segmentStep, totalSteps);
 }
 
 void NeoPixelLed::setSectionColor(
     uint startIndex,
     uint sectionLength,
     std::initializer_list<RgbColor> colors,
-    uint8_t intensity
+    uint step,
+    uint totalSteps
 ) {
     if (startIndex >= ledCount || sectionLength == 0 || colors.size() == 0) {
         return;
     }
 
     const uint safeLength = std::min(sectionLength, ledCount - startIndex);
+    const RgbColor sectionColor = getSequenceColor(colors, step, totalSteps);
     for (uint offset = 0; offset < safeLength; ++offset) {
-        const uint colorIndex = (offset * colors.size()) / safeLength;
-        const RgbColor* color = colors.begin() + std::min<uint>(colorIndex, colors.size() - 1);
-        setPixel(startIndex + offset, scaleColor(*color, intensity));
+        setPixel(startIndex + offset, sectionColor);
     }
 }
