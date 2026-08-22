@@ -1,0 +1,81 @@
+UBICACIÓN Y RESPONSABILIDAD DE LOS ARCHIVOS PWM
+===============================================
+
+Árbol relevante desde la raíz TemplatePipicoSDK:
+
+    lib/
+    `-- objPwm/
+        |-- PwmManager.h
+        `-- PwmOutput.h
+    src/
+    `-- srcPwm/
+        |-- PwmManager.cpp
+        `-- PwmOutput.cpp
+    prgProject/
+        |-- CMakeLists.txt
+        `-- main.cpp
+    Manuals/
+    `-- PWM/
+        |-- PWM_Manual.txt
+        |-- PWMOutput_Manual.txt
+        |-- PWM_Integracion_Main.txt
+        `-- PWM_Ubicacion_Archivos.txt
+
+1. ARCHIVOS DE INTERFAZ EN lib/objPwm
+-------------------------------------
+lib/objPwm/PwmManager.h
+    Interfaz pública del registro. Declara límites, códigos de resultado,
+    PwmOutputConfig, constructor y métodos de registro, búsqueda, validación e
+    impresión. También declara los arreglos y auxiliares privados. Es la cabecera
+    que debe incluir el usuario para crear y consultar PwmManager.
+
+lib/objPwm/PwmOutput.h
+    Interfaz pública de una salida física. Declara constructor, init(), getters,
+    control de nivel/duty/servo y las funciones rampPwmUpDown() y
+    sweepServo180(). Incluye PwmManager.h porque depende de su configuración.
+
+La carpeta lib almacena declaraciones consumidas por otros módulos. El
+CMakeLists la añade como include directory público de pwm_manager.
+
+2. IMPLEMENTACIONES EN src/srcPwm
+---------------------------------
+src/srcPwm/PwmManager.cpp
+    Implementa validaciones y almacenamiento del registro. Usa hardware/pwm.h
+    para obtener slice y canal desde un GPIO, y cstdio/cstring para mensajes y
+    manejo de nombres. No configura ni habilita la señal física.
+
+src/srcPwm/PwmOutput.cpp
+    Implementa la configuración real del GPIO y periférico PWM. Consulta el reloj
+    del sistema, calcula su divisor, configura wrap y canal, habilita el slice y
+    convierte niveles, porcentajes y ángulos. También implementa rampas y barridos.
+
+La carpeta src almacena definiciones compilables y detalles internos. Los dos
+archivos se compilan juntos en la biblioteca estática pwm_manager.
+
+3. INTEGRACIÓN EN prgProject
+----------------------------
+prgProject/CMakeLists.txt
+    Declara pwm_manager, agrega las dos implementaciones, expone lib/objPwm y
+    enlaza pico_stdlib, hardware_pwm y hardware_clocks. Luego enlaza la biblioteca
+    al ejecutable pico_neopixel_objeto.
+
+prgProject/main.cpp
+    Es el punto de entrada de la aplicación. Actualmente demuestra NeoPixel; para
+    usar PWM debe incluir PwmManager.h y PwmOutput.h y seguir el ejemplo detallado
+    en PWM_Integracion_Main.txt. No es un archivo interno de la biblioteca.
+
+4. DOCUMENTACIÓN EN Manuals/PWM
+-------------------------------
+PWM_Manual.txt: finalidad, cuidados, registro, errores y API de PwmManager.
+PWMOutput_Manual.txt: inicialización, cuidados, API y auxiliares de PwmOutput.
+PWM_Integracion_Main.txt: ejemplo completo y explicación línea por línea.
+PWM_Ubicacion_Archivos.txt: este inventario de rutas y responsabilidades.
+
+5. RELACIÓN ENTRE LOS COMPONENTES
+---------------------------------
+main.cpp crea PwmManager -> PwmManager valida y guarda configuraciones ->
+main.cpp crea PwmOutput con ese manager -> PwmOutput::init busca por nombre ->
+PwmOutput configura hardware_pwm -> main.cpp ordena duty, nivel o ángulo.
+
+Solo las cabeceras de lib/objPwm deben incluirse desde main.cpp. Las fuentes de
+src/srcPwm no deben incluirse con #include; CMake las compila y enlaza.

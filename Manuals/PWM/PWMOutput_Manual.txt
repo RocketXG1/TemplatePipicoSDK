@@ -1,0 +1,97 @@
+MANUAL DE PWM OUTPUT
+====================
+
+1. FINALIDAD Y FUNCIONALIDAD
+----------------------------
+PwmOutput representa una salida ya registrada y controla el periférico PWM del
+RP2040. Obtiene su configuración de PwmManager, configura la función del GPIO, el
+wrap, el divisor de reloj, el nivel inicial y habilita el slice. Después permite
+trabajar en pasos, porcentaje de ciclo útil o ángulo de servo.
+
+2. CUIDADOS DE USO
+------------------
+* Registre primero el nombre en PwmManager y compruebe los errores.
+* El PwmManager recibido por el constructor debe existir mientras exista la salida.
+* Llame a init() una sola vez por salida y verifique que devuelve PWM_OK.
+* Las órdenes de nivel no hacen nada antes de init(); isInitialized() permite
+  comprobar el estado.
+* setDutyPercent() limita automáticamente el valor al intervalo 0..100 %.
+* setLevel() limita el nivel. Use normalmente valores de 0 a periodSteps; para
+  evitar ambigüedad en el extremo superior puede utilizar periodSteps - 1.
+* setServoAngle180() supone un servo compatible con pulsos de 500..2500 us. Antes
+  de conectarlo confirme su ficha técnica, use alimentación apropiada y una masa
+  común; no alimente motores directamente desde un GPIO.
+* rampPwmUpDown() y sweepServo180() son bloqueantes porque emplean sleep_ms().
+* Un cambio de configuración en un slice afecta a sus dos canales. El manager
+  evita parámetros incompatibles, pero inicialice solo registros validados.
+
+3. INSTANCIACIÓN
+----------------
+    PwmManager pwmManager;
+    pwmManager.registerPwmOutput("LED_PWM", 15, 1000, 1000, false);
+
+    PwmOutput led(pwmManager);
+    int result = led.init("LED_PWM");
+    if (result == PwmManager::PWM_OK) {
+        led.setDutyPercent(50.0f);
+    }
+
+El nombre pasado a init() debe coincidir exactamente con el registrado.
+
+4. MÉTODOS PÚBLICOS DE PwmOutput
+--------------------------------
+explicit PwmOutput(const PwmManager& selectedPwmManager)
+    Vincula la salida con el registro. Aún no configura hardware.
+
+int init(const char* selectedName)
+    Busca el nombre, copia sus parámetros, asigna GPIO_FUNC_PWM, calcula
+    clkDiv = clk_sys / (frequencyHz * periodSteps), configura el slice con nivel
+    inicial cero y lo habilita. Devuelve un código de PwmManager.
+
+bool isInitialized() const
+    Devuelve true después de una inicialización correcta.
+
+const char* getName() const
+uint getGpioPin() const
+uint getSliceNum() const
+uint getChannel() const
+uint32_t getFrequencyHz() const
+uint32_t getPeriodSteps() const
+uint16_t getWrap() const
+    Consultores de la configuración copiada durante init(). Antes de init(), sus
+    valores son vacíos o cero y no representan una salida configurada.
+
+void setLevel(uint32_t level)
+    Escribe el nivel de comparación del canal, limitado por la resolución y por
+    el máximo de 16 bits. No realiza ninguna acción si la salida no está lista.
+
+void setDutyPercent(float dutyPercent)
+    Limita a 0..100 %, convierte el porcentaje a pasos y llama a setLevel(). Es la
+    opción usual para brillo de LED, potencia o velocidad mediante una etapa de
+    potencia adecuada.
+
+void setServoAngle180(float angleDegrees)
+    Limita a 0..180 grados, interpola un pulso entre 500 y 2500 us y lo convierte
+    a pasos según la frecuencia configurada.
+
+5. FUNCIONES AUXILIARES
+-----------------------
+void rampPwmUpDown(PwmOutput& pwm, const char* pwmName,
+                   float startPercent, float endPercent,
+                   float stepPercent, uint delayMs)
+    Recorre el duty desde el inicio hasta el final y regresa. Requiere paso mayor
+    que cero e inicio no mayor que final. pwmName solo se usa en los mensajes.
+
+void sweepServo180(PwmOutput& servo, const char* servoName, uint delayMs)
+    Mueve el ángulo 0 -> 180 -> 0 en incrementos de 5 grados. servoName solo se
+    muestra por consola y delayMs controla el tiempo bloqueante entre posiciones.
+
+6. EJEMPLOS DE CONTROL
+----------------------
+    led.setLevel(250);             // nivel directo
+    led.setDutyPercent(25.0f);     // 25 %
+    rampPwmUpDown(led, "LED_PWM", 0.0f, 100.0f, 5.0f, 20);
+
+    servo.setServoAngle180(90.0f); // posición central aproximada
+    sweepServo180(servo, "SERVO", 20);
+

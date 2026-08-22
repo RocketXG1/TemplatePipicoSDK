@@ -1,0 +1,96 @@
+INTEGRACIÓN DE PWM EN main.cpp
+==============================
+
+1. PREPARACIÓN DE CMAKE
+-----------------------
+El CMakeLists.txt actual ya crea la biblioteca pwm_manager con
+src/srcPwm/PwmManager.cpp y src/srcPwm/PwmOutput.cpp, publica lib/objPwm como ruta
+de inclusiones, enlaza pico_stdlib, hardware_pwm y hardware_clocks, y finalmente
+enlaza pwm_manager con el ejecutable. Por ello main.cpp puede incluir las cabeceras
+directamente. Si se traslada la librería a otro proyecto deben reproducirse esas
+reglas.
+
+2. EJEMPLO COMPLETO DE main.cpp
+-------------------------------
+    #include "PwmManager.h"                         // 1
+    #include "PwmOutput.h"                          // 2
+    #include "pico/stdlib.h"                        // 3
+
+    int main() {                                    // 4
+        stdio_init_all();                           // 5
+
+        PwmManager pwmManager;                      // 6
+        int ledStatus = pwmManager.registerPwmOutput(
+            "LED_PWM", 15, 1000, 1000, false       // 7
+        );
+        int servoStatus = pwmManager.registerPwmOutput(
+            "SERVO", 16, 50, 20000, true           // 8
+        );
+
+        if (!pwmManager.validateRegistrationStatus() || // 9
+            ledStatus != PwmManager::PWM_OK ||
+            servoStatus != PwmManager::PWM_OK) {
+            while (true) { sleep_ms(1000); }        // 10
+        }
+
+        pwmManager.printPwmMap();                   // 11
+        PwmOutput led(pwmManager);                  // 12
+        PwmOutput servo(pwmManager);                // 13
+
+        if (led.init("LED_PWM") != PwmManager::PWM_OK || // 14
+            servo.init("SERVO") != PwmManager::PWM_OK) {
+            while (true) { sleep_ms(1000); }        // 15
+        }
+
+        while (true) {                              // 16
+            rampPwmUpDown(
+                led, "LED_PWM", 0.0f, 100.0f, 5.0f, 20 // 17
+            );
+            sweepServo180(servo, "SERVO", 20);     // 18
+        }
+    }                                               // 19
+
+3. EXPLICACIÓN LÍNEA POR LÍNEA
+------------------------------
+1. Importa la declaración de PwmManager y sus códigos de error.
+2. Importa PwmOutput y las dos funciones auxiliares.
+3. Importa inicialización estándar y sleep_ms() del Pico SDK.
+4. Define el punto de entrada del firmware.
+5. Inicializa las salidas estándar para poder observar los mensajes printf.
+6. Crea el registro central antes que las salidas que dependerán de él.
+7. Reserva LED_PWM en GPIO 15 a 1 kHz, con 1000 pasos y slice compartible.
+8. Reserva SERVO en GPIO 16 a 50 Hz, 20000 pasos y slice exclusivo. Si se cambia
+   el GPIO, compruebe que no comparte slice con LED_PWM u otro periférico.
+9. Revisa tanto el resumen como los retornos individuales. El cortocircuito de ||
+   hace que cualquier error conduzca al bloque seguro.
+10. Detiene el programa sin operar hardware configurado parcialmente. En una
+    aplicación real puede parpadear un LED o informar el código de error.
+11. Imprime nombre, GPIO, slice, canal, frecuencia, pasos, wrap y exclusividad.
+12. Crea la salida de LED vinculada al manager, todavía sin habilitar hardware.
+13. Crea de igual forma la salida del servo.
+14. Busca ambos nombres y configura GPIO, reloj, wrap, nivel y habilitación.
+15. Detiene el programa si algún nombre no existe o no puede inicializarse.
+16. Inicia el lazo permanente típico de un firmware embebido.
+17. Aumenta y reduce el duty del LED entre 0 y 100 %, en pasos de 5 % cada 20 ms.
+18. Barre el servo entre 0 y 180 grados y vuelve, esperando 20 ms por posición.
+19. Cierra main(); el lazo infinito evita que normalmente se alcance este punto.
+
+4. USO SIN FUNCIONES BLOQUEANTES
+--------------------------------
+Dentro de un lazo con otras tareas se recomienda actualizar solo un valor por
+iteración y controlar el tiempo con temporizadores:
+
+    led.setDutyPercent(40.0f);
+    servo.setServoAngle180(90.0f);
+
+Así se evitan los sleep_ms() internos de rampPwmUpDown() y sweepServo180().
+
+5. LISTA DE COMPROBACIÓN
+------------------------
+[ ] La alimentación y masa del actuador son correctas.
+[ ] Los GPIO existen en la placa y no están ocupados por otras funciones.
+[ ] Los nombres son únicos y coinciden exactamente en register e init.
+[ ] Cada retorno se compara con PwmManager::PWM_OK.
+[ ] Los slices compartidos usan frecuencia y periodSteps idénticos.
+[ ] El divisor resultante es compatible con el hardware y la precisión requerida.
+
