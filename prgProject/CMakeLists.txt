@@ -10,6 +10,21 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 pico_sdk_init()
 
+add_library(pwm_manager STATIC
+    ../src/srcPwm/PwmManager.cpp
+    ../src/srcPwm/PwmOutput.cpp
+)
+
+target_include_directories(pwm_manager PUBLIC
+    ../lib/objPwm
+)
+
+target_link_libraries(pwm_manager PUBLIC
+    pico_stdlib
+    hardware_pwm
+    hardware_clocks
+)
+
 add_executable(pico_neopixel_objeto
     main.cpp
     ../src/srcNeopixel/NeoPixelLed.cpp
@@ -27,6 +42,7 @@ pico_generate_pio_header(pico_neopixel_objeto
 target_link_libraries(pico_neopixel_objeto
     pico_stdlib
     hardware_pio
+    pwm_manager
 )
 
 pico_add_extra_outputs(pico_neopixel_objeto)
