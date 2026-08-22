@@ -1,0 +1,123 @@
+MANUAL DE PWM MANAGER
+=====================
+
+1. FINALIDAD Y FUNCIONALIDAD
+----------------------------
+PwmManager es el registro central de las salidas PWM del proyecto. Su finalidad
+es describir cada salida antes de tocar el hardware, asignarle un nombre y evitar
+configuraciones incompatibles. El manager no genera la señal: conserva y valida
+la configuración que después consume un objeto PwmOutput.
+
+Cada registro almacena nombre, GPIO, slice, canal, frecuencia, cantidad de pasos,
+valor wrap y si el slice debe ser exclusivo. En RP2040, dos GPIO pueden compartir
+un slice PWM; ambos canales del mismo slice comparten frecuencia y wrap. Por eso
+el manager rechaza canales repetidos, slices exclusivos o parámetros distintos en
+un mismo slice.
+
+2. CUIDADOS ANTES DE USARLO
+---------------------------
+* Cree un solo PwmManager con una vida útil mayor que todos sus PwmOutput. Estos
+  guardan un puntero al manager y este no debe destruirse antes que ellos.
+* Use nombres únicos, no vacíos y de hasta 15 caracteres útiles. El carácter 16
+  se reserva para el terminador de la cadena.
+* Use GPIO válidos para la placa. La implementación acepta números 0 a 29, pero
+  eso no significa que todos estén expuestos o libres en cada modelo de Pico.
+* No registre dos veces el mismo GPIO ni el mismo nombre.
+* frequencyHz debe ser mayor que cero. periodSteps debe estar entre 1 y 65536.
+* GPIO que comparten slice solo pueden coexistir si ocupan canales diferentes,
+  tienen igual frecuencia e igual periodSteps y ninguno exige exclusividad.
+* Para un servo se recomienda un slice exclusivo, 50 Hz y suficientes pasos para
+  representar con precisión pulsos de 500 a 2500 microsegundos.
+* Compruebe siempre el código devuelto por registerPwmOutput() y llame a
+  validateRegistrationStatus() antes de inicializar las salidas físicas.
+* La clase admite como máximo 8 salidas y conserva hasta 16 intentos de registro.
+
+3. INSTANCIACIÓN Y REGISTRO
+---------------------------
+Incluya las dos interfaces:
+
+    #include "PwmManager.h"
+    #include "PwmOutput.h"
+
+Cree el registro y agregue las configuraciones:
+
+    PwmManager pwmManager;
+
+    int ledResult = pwmManager.registerPwmOutput(
+        "LED_PWM", 15, 1000, 1000, false
+    );
+    int servoResult = pwmManager.registerPwmOutput(
+        "SERVO", 16, 50, 20000, true
+    );
+
+El orden de parámetros es: nombre, GPIO, frecuencia en Hz, pasos del periodo y
+exclusividad del slice. Un resultado igual a PwmManager::PWM_OK indica éxito.
+
+4. CONSTANTES Y CÓDIGOS DE RESULTADO
+------------------------------------
+MAX_PWM_OUTPUTS (8): máximo de salidas registradas correctamente.
+PWM_NAME_MAX_LENGTH (16): tamaño total del búfer del nombre.
+MAX_PWM_REGISTRATION_ATTEMPTS (16): intentos cuyo resultado puede almacenarse.
+
+PWM_OK (0): operación correcta.
+PWM_ERROR_INVALID_NAME (-1): nombre nulo o vacío.
+PWM_ERROR_NOT_FOUND (-2): no existe una salida con el nombre solicitado.
+PWM_ERROR_NOT_INITIALIZED (-3): objeto requerido todavía no inicializado.
+PWM_ERROR_INVALID_PERIOD_STEPS (-4): frecuencia o pasos fuera del intervalo.
+PWM_ERROR_REGISTRY_FULL (-5): se alcanzaron las 8 salidas.
+PWM_ERROR_GPIO_INVALID (-6): GPIO fuera del intervalo 0..29.
+PWM_ERROR_GPIO_USED (-7): el GPIO ya fue registrado.
+PWM_ERROR_NAME_USED (-8): el nombre ya fue registrado.
+PWM_ERROR_SLICE_CONFLICT (-9): exclusividad o temporización incompatible.
+PWM_ERROR_CHANNEL_CONFLICT (-10): el canal del slice ya está ocupado.
+
+5. MÉTODOS PÚBLICOS DE PwmManager
+---------------------------------
+PwmManager()
+    Construye un registro vacío e inicializa sus contadores y arreglos.
+
+bool isFull() const
+    Devuelve true cuando ya existen 8 registros correctos.
+
+bool nameAlreadyUsed(const char* name) const
+    Indica si el nombre ya pertenece a una salida registrada.
+
+bool gpioAlreadyUsed(uint gpioPin) const
+    Indica si el GPIO ya está reservado por este manager.
+
+int registerPwmOutput(const char* name, uint gpioPin,
+                      uint32_t frequencyHz, uint32_t periodSteps,
+                      bool requireExclusiveSlice)
+    Valida y registra una salida. Calcula slice, canal y wrap (periodSteps - 1),
+    imprime el resultado y devuelve PWM_OK o un código negativo. true en el
+    último argumento impide compartir el slice con cualquier otra salida.
+
+bool validateRegistrationStatus() const
+    Imprime un resumen de todos los intentos guardados. Devuelve true solamente
+    si ninguno falló. No sustituye la comprobación inmediata de cada retorno.
+
+int getPwmConfigByName(const char* selectedName,
+                       PwmOutputConfig& outputConfig) const
+    Copia en outputConfig la configuración que coincide con el nombre. Lo usa
+    PwmOutput::init(), aunque también puede emplearse para consultar el mapa.
+
+void printPwmMap() const
+    Imprime por consola todas las salidas aceptadas y sus recursos PWM.
+
+6. ESTRUCTURA PwmOutputConfig
+-----------------------------
+name: identificador textual; gpioPin: GPIO físico; sliceNum: slice calculado;
+channel: canal A o B; frequencyHz: frecuencia; periodSteps: resolución solicitada;
+wrap: cuenta máxima del hardware; requireExclusiveSlice: política del slice;
+used: indica que la entrada contiene un registro válido.
+
+7. FLUJO INTERNO EXPLICADO
+--------------------------
+1) El constructor vacía salidas, resultados y contadores.
+2) registerPwmOutput() comprueba capacidad, nombre, GPIO, frecuencia y pasos.
+3) hardware_pwm convierte el GPIO a slice y canal.
+4) El manager compara el nuevo registro con las salidas del mismo slice.
+5) Si es compatible, copia los datos, calcula wrap y guarda PWM_OK.
+6) Si falla, guarda el código y no incrementa la cantidad de salidas válidas.
+7) PwmOutput solicita luego esos datos mediante getPwmConfigByName().
+
