@@ -54,6 +54,13 @@ public:
         bool requireExclusiveSlice,
         PwmRegistrationAction* action = nullptr
     );
+    int updatePwmOutput(
+        const char* name,
+        uint gpioPin,
+        uint32_t frequencyHz,
+        uint32_t periodSteps,
+        bool requireExclusiveSlice
+    );
     bool validateRegistrationStatus() const;
     int getPwmConfigByName(const char* selectedName, PwmOutputConfig& outputConfig) const;
     void printPwmMap() const;
