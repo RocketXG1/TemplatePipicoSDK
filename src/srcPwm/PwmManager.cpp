@@ -32,39 +32,58 @@ bool PwmManager::gpioAlreadyUsed(uint gpioPin) const {
     return false;
 }
 
-int PwmManager::registerPwmOutput(const char* name, uint gpioPin, uint32_t frequencyHz, uint32_t periodSteps, bool requireExclusiveSlice) {
-    auto fail = [this, name](int code, const char* message) {
-        std::printf("ERROR PWM: %s\n", message);
-        saveRegistrationResult(name, code);
-        return code;
-    };
-    if (isFull()) return fail(PWM_ERROR_REGISTRY_FULL, "registry is full.");
-    if (name == nullptr || name[0] == '\0') return fail(PWM_ERROR_INVALID_NAME, "invalid name.");
-    if (nameAlreadyUsed(name)) return fail(PWM_ERROR_NAME_USED, "name already used.");
-    if (gpioPin >= 30) return fail(PWM_ERROR_GPIO_INVALID, "invalid GPIO.");
-    if (gpioAlreadyUsed(gpioPin)) return fail(PWM_ERROR_GPIO_USED, "GPIO already used.");
-    if (frequencyHz == 0 || periodSteps == 0 || periodSteps > 65536) {
-        return fail(PWM_ERROR_INVALID_PERIOD_STEPS, "frequency must be non-zero and periodSteps must be between 1 and 65536.");
+int PwmManager::findPwmOutputIndex(const char* name) const {
+    if (name == nullptr || name[0] == '\0') return -1;
+    for (uint i = 0; i < outputCount; ++i) {
+        if (outputs[i].used && textEquals(outputs[i].name, name)) return static_cast<int>(i);
     }
+    return -1;
+}
+
+int PwmManager::validatePwmOutput(
+    const char* name,
+    uint gpioPin,
+    uint32_t frequencyHz,
+    uint32_t periodSteps,
+    bool requireExclusiveSlice,
+    int ignoredOutputIndex
+) const {
+    if (name == nullptr || name[0] == '\0') return PWM_ERROR_INVALID_NAME;
+    if (gpioPin >= 30) return PWM_ERROR_GPIO_INVALID;
+    if (frequencyHz == 0 || periodSteps == 0 || periodSteps > 65536) return PWM_ERROR_INVALID_PERIOD_STEPS;
 
     const uint newSlice = pwm_gpio_to_slice_num(gpioPin);
     const uint newChannel = pwm_gpio_to_channel(gpioPin);
-    const uint16_t calculatedWrap = static_cast<uint16_t>(periodSteps - 1);
     for (uint i = 0; i < outputCount; ++i) {
+        if (static_cast<int>(i) == ignoredOutputIndex) continue;
         const PwmOutputInfo& current = outputs[i];
-        if (!current.used || current.sliceNum != newSlice) continue;
+        if (!current.used) continue;
+        if (textEquals(current.name, name)) return PWM_ERROR_NAME_USED;
+        if (current.gpioPin == gpioPin) return PWM_ERROR_GPIO_USED;
+        if (current.sliceNum != newSlice) continue;
         if (requireExclusiveSlice || current.requireExclusiveSlice) {
-            return fail(PWM_ERROR_SLICE_CONFLICT, "requested PWM slice is exclusive or already exclusively assigned.");
+            return PWM_ERROR_SLICE_CONFLICT;
         }
-        if (current.channel == newChannel) {
-            return fail(PWM_ERROR_CHANNEL_CONFLICT, "requested PWM slice channel is already assigned.");
-        }
+        if (current.channel == newChannel) return PWM_ERROR_CHANNEL_CONFLICT;
         if (current.frequencyHz != frequencyHz || current.periodSteps != periodSteps) {
-            return fail(PWM_ERROR_SLICE_CONFLICT, "outputs sharing a slice must use the same frequency and periodSteps.");
+            return PWM_ERROR_SLICE_CONFLICT;
         }
     }
+    return PWM_OK;
+}
 
-    PwmOutputInfo& output = outputs[outputCount++];
+void PwmManager::assignPwmOutput(
+    PwmOutputInfo& output,
+    const char* name,
+    uint gpioPin,
+    uint32_t frequencyHz,
+    uint32_t periodSteps,
+    bool requireExclusiveSlice
+) {
+    const uint newSlice = pwm_gpio_to_slice_num(gpioPin);
+    const uint newChannel = pwm_gpio_to_channel(gpioPin);
+    const uint16_t calculatedWrap = static_cast<uint16_t>(periodSteps - 1);
+
     std::strncpy(output.name, name, PWM_NAME_MAX_LENGTH - 1);
     output.name[PWM_NAME_MAX_LENGTH - 1] = '\0';
     output.gpioPin = gpioPin;
@@ -75,8 +94,64 @@ int PwmManager::registerPwmOutput(const char* name, uint gpioPin, uint32_t frequ
     output.wrap = calculatedWrap;
     output.requireExclusiveSlice = requireExclusiveSlice;
     output.used = true;
+}
+
+int PwmManager::registerPwmOutput(const char* name, uint gpioPin, uint32_t frequencyHz, uint32_t periodSteps, bool requireExclusiveSlice) {
+    const int existingOutputIndex = findPwmOutputIndex(name);
+    int result = PWM_OK;
+    if (existingOutputIndex < 0 && isFull()) {
+        result = PWM_ERROR_REGISTRY_FULL;
+    } else {
+        result = validatePwmOutput(
+            name,
+            gpioPin,
+            frequencyHz,
+            periodSteps,
+            requireExclusiveSlice,
+            existingOutputIndex
+        );
+    }
+    if (result != PWM_OK) {
+        std::printf("ERROR PWM: registration failed with code %d.\n", result);
+        saveRegistrationResult(name, result);
+        return result;
+    }
+
+    const bool isUpdate = existingOutputIndex >= 0;
+    PwmOutputInfo& output = isUpdate ? outputs[existingOutputIndex] : outputs[outputCount++];
+    assignPwmOutput(output, name, gpioPin, frequencyHz, periodSteps, requireExclusiveSlice);
     saveRegistrationResult(name, PWM_OK);
-    std::printf("PWM registered: %s | GPIO %u | slice %u | channel %s | freq %lu Hz | periodSteps %lu | wrap %u | exclusive=%s\n",
+    std::printf("PWM %s: %s | GPIO %u | slice %u | channel %s | freq %lu Hz | periodSteps %lu | wrap %u | exclusive=%s\n",
+        isUpdate ? "updated" : "registered",
+        output.name, output.gpioPin, output.sliceNum, output.channel == PWM_CHAN_A ? "A" : "B",
+        static_cast<unsigned long>(output.frequencyHz), static_cast<unsigned long>(output.periodSteps), output.wrap,
+        output.requireExclusiveSlice ? "YES" : "NO");
+    return PWM_OK;
+}
+
+int PwmManager::updatePwmOutput(const char* name, uint gpioPin, uint32_t frequencyHz, uint32_t periodSteps, bool requireExclusiveSlice) {
+    const int outputIndex = findPwmOutputIndex(name);
+    if (outputIndex < 0) {
+        std::printf("ERROR PWM: output name not found: %s\n", name == nullptr ? "UNKNOWN" : name);
+        return name == nullptr || name[0] == '\0' ? PWM_ERROR_INVALID_NAME : PWM_ERROR_NOT_FOUND;
+    }
+
+    const int result = validatePwmOutput(
+        name,
+        gpioPin,
+        frequencyHz,
+        periodSteps,
+        requireExclusiveSlice,
+        outputIndex
+    );
+    if (result != PWM_OK) {
+        std::printf("ERROR PWM: update for %s failed with code %d.\n", name, result);
+        return result;
+    }
+
+    PwmOutputInfo& output = outputs[outputIndex];
+    assignPwmOutput(output, name, gpioPin, frequencyHz, periodSteps, requireExclusiveSlice);
+    std::printf("PWM updated: %s | GPIO %u | slice %u | channel %s | freq %lu Hz | periodSteps %lu | wrap %u | exclusive=%s\n",
         output.name, output.gpioPin, output.sliceNum, output.channel == PWM_CHAN_A ? "A" : "B",
         static_cast<unsigned long>(output.frequencyHz), static_cast<unsigned long>(output.periodSteps), output.wrap,
         output.requireExclusiveSlice ? "YES" : "NO");

@@ -55,6 +55,26 @@ int main() {
         true
     );
 
+    std::printf("Mapa PWM antes de actualizar PUMP:\n");
+    pwmManager.printPwmMap();
+
+    // registerPwmOutput detecta automáticamente que PUMP ya existe por su NAME.
+    // Antes de sobrescribirlo, valida estos valores contra los demás PWM.
+    const int pumpUpdateResult = pwmManager.registerPwmOutput(
+        "PUMP",
+        6,
+        750,
+        1000,
+        true
+    );
+    if (pumpUpdateResult != PwmManager::PWM_OK) {
+        std::printf("No fue posible actualizar PUMP. Código: %d\n", pumpUpdateResult);
+        while (true) {
+            tight_loop_contents();
+        }
+    }
+
+    std::printf("Mapa PWM después de actualizar PUMP:\n");
     pwmManager.printPwmMap();
     if (!pwmManager.validateRegistrationStatus()) {
         std::printf("No fue posible registrar todos los PWM.\n");
