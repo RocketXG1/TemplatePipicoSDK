@@ -47,6 +47,13 @@ public:
         uint32_t periodSteps,
         bool requireExclusiveSlice
     );
+    int updatePwmOutput(
+        const char* name,
+        uint gpioPin,
+        uint32_t frequencyHz,
+        uint32_t periodSteps,
+        bool requireExclusiveSlice
+    );
     bool validateRegistrationStatus() const;
     int getPwmConfigByName(const char* selectedName, PwmOutputConfig& outputConfig) const;
     void printPwmMap() const;
@@ -66,6 +73,23 @@ private:
     uint registrationResultCount;
 
     bool textEquals(const char* a, const char* b) const;
+    int findPwmOutputIndex(const char* name) const;
+    int validatePwmOutput(
+        const char* name,
+        uint gpioPin,
+        uint32_t frequencyHz,
+        uint32_t periodSteps,
+        bool requireExclusiveSlice,
+        int ignoredOutputIndex
+    ) const;
+    void assignPwmOutput(
+        PwmOutputInfo& output,
+        const char* name,
+        uint gpioPin,
+        uint32_t frequencyHz,
+        uint32_t periodSteps,
+        bool requireExclusiveSlice
+    );
     void saveRegistrationResult(const char* name, int resultCode);
 };
 
