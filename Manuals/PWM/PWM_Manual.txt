@@ -57,7 +57,7 @@ exclusividad del slice. Un resultado igual a PwmManager::PWM_OK indica éxito.
 
 4. ACTUALIZACIÓN AUTOMÁTICA POR NOMBRE
 --------------------------------------
-registerPwmOutput() funciona como registro o actualización. NAME es el
+registerPwmOutput() es el único método necesario para registrar o actualizar. NAME es el
 identificador estable: si no existe, se agrega una salida; si ya existe, el manager
 intenta reemplazar los datos del mismo slot.
 
@@ -65,8 +65,9 @@ intenta reemplazar los datos del mismo slot.
         "PUMP", 6, 500, 2000, true
     );
 
+    PwmManager::PwmRegistrationAction action;
     int updateResult = pwmManager.registerPwmOutput(
-        "PUMP", 6, 750, 1000, true
+        "PUMP", 6, 750, 1000, true, &action
     );
 
 La segunda llamada encuentra PUMP y valida GPIO, frecuencia, periodSteps, slice,
@@ -80,9 +81,15 @@ otra vez "PUMP". Un nombre diferente representa una salida nueva. Realice estas
 actualizaciones antes de PwmOutput::init(); un PwmOutput ya inicializado conserva
 la copia anterior y no reconfigura automáticamente el hardware.
 
-updatePwmOutput() permanece disponible cuando se desea exigir que el nombre exista.
-A diferencia de registerPwmOutput(), devuelve PWM_ERROR_NOT_FOUND en vez de crear
-una salida cuando no encuentra el NAME indicado.
+El retorno entero continúa indicando PWM_OK o el error de validación. El parámetro
+opcional action permite distinguir el resultado de esa misma llamada:
+
+    PwmRegistrationAction::Registered: NAME no existía y fue creado.
+    PwmRegistrationAction::Updated: NAME existía y fue sobrescrito.
+    PwmRegistrationAction::None: la validación falló y no hubo cambios.
+
+Puede omitirse &action cuando el llamador solo necesita saber si la operación fue
+correcta. La forma anterior con cinco argumentos continúa siendo válida.
 
 5. CONSTANTES Y CÓDIGOS DE RESULTADO
 ------------------------------------
@@ -118,36 +125,16 @@ bool gpioAlreadyUsed(uint gpioPin) const
 
 int registerPwmOutput(const char* name, uint gpioPin,
                       uint32_t frequencyHz, uint32_t periodSteps,
-                      bool requireExclusiveSlice)
+                      bool requireExclusiveSlice,
+                      PwmRegistrationAction* action = nullptr)
     Busca primero una salida con el mismo name. Si no existe, valida y registra
     una salida nueva. Si existe, valida los datos nuevos ignorando solamente el
     slot que será reemplazado y lo actualiza sin aumentar la cantidad de registros.
     En ambos casos compara la configuración contra todos los demás PWM, calcula
     slice, canal y wrap (periodSteps - 1), imprime el resultado y devuelve PWM_OK o
-    un código negativo. true en el último argumento impide compartir el slice con
-    cualquier otra salida.
-
-int updatePwmOutput(const char* name, uint gpioPin,
-                    uint32_t frequencyHz, uint32_t periodSteps,
-                    bool requireExclusiveSlice)
-    Busca una salida existente por name y reemplaza sus datos asignados después de
-    validarlos contra todos los demás registros. Durante la validación ignora solo
-    el slot que será reemplazado, por lo que permite conservar su propio nombre y
-    GPIO, pero sigue rechazando conflictos con cualquier otra salida. Recalcula
-    slice, canal y wrap sin cambiar la cantidad de registros. Devuelve
-    PWM_ERROR_NOT_FOUND si el nombre no existe. La actualización del registro no
-    reconfigura automáticamente un PwmOutput que ya haya sido inicializado.
-
-int updatePwmOutput(const char* name, uint gpioPin,
-                    uint32_t frequencyHz, uint32_t periodSteps,
-                    bool requireExclusiveSlice)
-    Busca una salida existente por name y reemplaza sus datos asignados después de
-    validarlos contra todos los demás registros. Durante la validación ignora solo
-    el slot que será reemplazado, por lo que permite conservar su propio nombre y
-    GPIO, pero sigue rechazando conflictos con cualquier otra salida. Recalcula
-    slice, canal y wrap sin cambiar la cantidad de registros. Devuelve
-    PWM_ERROR_NOT_FOUND si el nombre no existe. La actualización del registro no
-    reconfigura automáticamente un PwmOutput que ya haya sido inicializado.
+    un código negativo. true impide compartir el slice con cualquier otra salida.
+    Si action no es nullptr, informa si el slot fue creado, actualizado o no fue
+    modificado por un error.
 
 bool validateRegistrationStatus() const
     Imprime un resumen de todos los intentos guardados. Devuelve true solamente

@@ -23,6 +23,12 @@ public:
     static constexpr int PWM_ERROR_SLICE_CONFLICT = -9;
     static constexpr int PWM_ERROR_CHANNEL_CONFLICT = -10;
 
+    enum class PwmRegistrationAction {
+        None,
+        Registered,
+        Updated
+    };
+
     struct PwmOutputConfig {
         char name[PWM_NAME_MAX_LENGTH];
         uint gpioPin;
@@ -45,7 +51,8 @@ public:
         uint gpioPin,
         uint32_t frequencyHz,
         uint32_t periodSteps,
-        bool requireExclusiveSlice
+        bool requireExclusiveSlice,
+        PwmRegistrationAction* action = nullptr
     );
     int updatePwmOutput(
         const char* name,

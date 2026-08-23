@@ -96,7 +96,15 @@ void PwmManager::assignPwmOutput(
     output.used = true;
 }
 
-int PwmManager::registerPwmOutput(const char* name, uint gpioPin, uint32_t frequencyHz, uint32_t periodSteps, bool requireExclusiveSlice) {
+int PwmManager::registerPwmOutput(
+    const char* name,
+    uint gpioPin,
+    uint32_t frequencyHz,
+    uint32_t periodSteps,
+    bool requireExclusiveSlice,
+    PwmRegistrationAction* action
+) {
+    if (action != nullptr) *action = PwmRegistrationAction::None;
     const int existingOutputIndex = findPwmOutputIndex(name);
     int result = PWM_OK;
     if (existingOutputIndex < 0 && isFull()) {
@@ -120,67 +128,12 @@ int PwmManager::registerPwmOutput(const char* name, uint gpioPin, uint32_t frequ
     const bool isUpdate = existingOutputIndex >= 0;
     PwmOutputInfo& output = isUpdate ? outputs[existingOutputIndex] : outputs[outputCount++];
     assignPwmOutput(output, name, gpioPin, frequencyHz, periodSteps, requireExclusiveSlice);
+    if (action != nullptr) {
+        *action = isUpdate ? PwmRegistrationAction::Updated : PwmRegistrationAction::Registered;
+    }
     saveRegistrationResult(name, PWM_OK);
     std::printf("PWM %s: %s | GPIO %u | slice %u | channel %s | freq %lu Hz | periodSteps %lu | wrap %u | exclusive=%s\n",
         isUpdate ? "updated" : "registered",
-        output.name, output.gpioPin, output.sliceNum, output.channel == PWM_CHAN_A ? "A" : "B",
-        static_cast<unsigned long>(output.frequencyHz), static_cast<unsigned long>(output.periodSteps), output.wrap,
-        output.requireExclusiveSlice ? "YES" : "NO");
-    return PWM_OK;
-}
-
-int PwmManager::updatePwmOutput(const char* name, uint gpioPin, uint32_t frequencyHz, uint32_t periodSteps, bool requireExclusiveSlice) {
-    const int outputIndex = findPwmOutputIndex(name);
-    if (outputIndex < 0) {
-        std::printf("ERROR PWM: output name not found: %s\n", name == nullptr ? "UNKNOWN" : name);
-        return name == nullptr || name[0] == '\0' ? PWM_ERROR_INVALID_NAME : PWM_ERROR_NOT_FOUND;
-    }
-
-    const int result = validatePwmOutput(
-        name,
-        gpioPin,
-        frequencyHz,
-        periodSteps,
-        requireExclusiveSlice,
-        outputIndex
-    );
-    if (result != PWM_OK) {
-        std::printf("ERROR PWM: update for %s failed with code %d.\n", name, result);
-        return result;
-    }
-
-    PwmOutputInfo& output = outputs[outputIndex];
-    assignPwmOutput(output, name, gpioPin, frequencyHz, periodSteps, requireExclusiveSlice);
-    std::printf("PWM updated: %s | GPIO %u | slice %u | channel %s | freq %lu Hz | periodSteps %lu | wrap %u | exclusive=%s\n",
-        output.name, output.gpioPin, output.sliceNum, output.channel == PWM_CHAN_A ? "A" : "B",
-        static_cast<unsigned long>(output.frequencyHz), static_cast<unsigned long>(output.periodSteps), output.wrap,
-        output.requireExclusiveSlice ? "YES" : "NO");
-    return PWM_OK;
-}
-
-int PwmManager::updatePwmOutput(const char* name, uint gpioPin, uint32_t frequencyHz, uint32_t periodSteps, bool requireExclusiveSlice) {
-    const int outputIndex = findPwmOutputIndex(name);
-    if (outputIndex < 0) {
-        std::printf("ERROR PWM: output name not found: %s\n", name == nullptr ? "UNKNOWN" : name);
-        return name == nullptr || name[0] == '\0' ? PWM_ERROR_INVALID_NAME : PWM_ERROR_NOT_FOUND;
-    }
-
-    const int result = validatePwmOutput(
-        name,
-        gpioPin,
-        frequencyHz,
-        periodSteps,
-        requireExclusiveSlice,
-        outputIndex
-    );
-    if (result != PWM_OK) {
-        std::printf("ERROR PWM: update for %s failed with code %d.\n", name, result);
-        return result;
-    }
-
-    PwmOutputInfo& output = outputs[outputIndex];
-    assignPwmOutput(output, name, gpioPin, frequencyHz, periodSteps, requireExclusiveSlice);
-    std::printf("PWM updated: %s | GPIO %u | slice %u | channel %s | freq %lu Hz | periodSteps %lu | wrap %u | exclusive=%s\n",
         output.name, output.gpioPin, output.sliceNum, output.channel == PWM_CHAN_A ? "A" : "B",
         static_cast<unsigned long>(output.frequencyHz), static_cast<unsigned long>(output.periodSteps), output.wrap,
         output.requireExclusiveSlice ? "YES" : "NO");
