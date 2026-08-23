@@ -23,6 +23,12 @@ public:
     static constexpr int PWM_ERROR_SLICE_CONFLICT = -9;
     static constexpr int PWM_ERROR_CHANNEL_CONFLICT = -10;
 
+    enum class PwmRegistrationAction {
+        None,
+        Registered,
+        Updated
+    };
+
     struct PwmOutputConfig {
         char name[PWM_NAME_MAX_LENGTH];
         uint gpioPin;
@@ -45,7 +51,8 @@ public:
         uint gpioPin,
         uint32_t frequencyHz,
         uint32_t periodSteps,
-        bool requireExclusiveSlice
+        bool requireExclusiveSlice,
+        PwmRegistrationAction* action = nullptr
     );
     bool validateRegistrationStatus() const;
     int getPwmConfigByName(const char* selectedName, PwmOutputConfig& outputConfig) const;
@@ -66,6 +73,23 @@ private:
     uint registrationResultCount;
 
     bool textEquals(const char* a, const char* b) const;
+    int findPwmOutputIndex(const char* name) const;
+    int validatePwmOutput(
+        const char* name,
+        uint gpioPin,
+        uint32_t frequencyHz,
+        uint32_t periodSteps,
+        bool requireExclusiveSlice,
+        int ignoredOutputIndex
+    ) const;
+    void assignPwmOutput(
+        PwmOutputInfo& output,
+        const char* name,
+        uint gpioPin,
+        uint32_t frequencyHz,
+        uint32_t periodSteps,
+        bool requireExclusiveSlice
+    );
     void saveRegistrationResult(const char* name, int resultCode);
 };
 
