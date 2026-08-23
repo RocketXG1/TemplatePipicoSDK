@@ -138,6 +138,17 @@ int updatePwmOutput(const char* name, uint gpioPin,
     PWM_ERROR_NOT_FOUND si el nombre no existe. La actualización del registro no
     reconfigura automáticamente un PwmOutput que ya haya sido inicializado.
 
+int updatePwmOutput(const char* name, uint gpioPin,
+                    uint32_t frequencyHz, uint32_t periodSteps,
+                    bool requireExclusiveSlice)
+    Busca una salida existente por name y reemplaza sus datos asignados después de
+    validarlos contra todos los demás registros. Durante la validación ignora solo
+    el slot que será reemplazado, por lo que permite conservar su propio nombre y
+    GPIO, pero sigue rechazando conflictos con cualquier otra salida. Recalcula
+    slice, canal y wrap sin cambiar la cantidad de registros. Devuelve
+    PWM_ERROR_NOT_FOUND si el nombre no existe. La actualización del registro no
+    reconfigura automáticamente un PwmOutput que ya haya sido inicializado.
+
 bool validateRegistrationStatus() const
     Imprime un resumen de todos los intentos guardados. Devuelve true solamente
     si ninguno falló. No sustituye la comprobación inmediata de cada retorno.
