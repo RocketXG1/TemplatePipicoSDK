@@ -55,6 +55,22 @@ int main() {
         true
     );
 
+    // Actualiza PUMP usando NAME como identificador. El manager ignora solamente
+    // el registro anterior de PUMP y valida estos valores contra los demás PWM.
+    const int pumpUpdateResult = pwmManager.updatePwmOutput(
+        "PUMP",
+        6,
+        750,
+        1000,
+        true
+    );
+    if (pumpUpdateResult != PwmManager::PWM_OK) {
+        std::printf("No fue posible actualizar PUMP. Código: %d\n", pumpUpdateResult);
+        while (true) {
+            tight_loop_contents();
+        }
+    }
+
     pwmManager.printPwmMap();
     if (!pwmManager.validateRegistrationStatus()) {
         std::printf("No fue posible registrar todos los PWM.\n");
