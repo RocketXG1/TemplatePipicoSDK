@@ -19,20 +19,22 @@ un mismo slice.
 * Cree un solo PwmManager con una vida útil mayor que todos sus PwmOutput. Estos
   guardan un puntero al manager y este no debe destruirse antes que ellos.
 * Use nombres únicos, no vacíos y de hasta 15 caracteres útiles. El carácter 16
-  se reserva para el terminador de la cadena.
+  se reserva para el terminador de la cadena. Los nombres más largos se rechazan.
 * Use GPIO válidos para la placa. La implementación acepta números 0 a 29, pero
   eso no significa que todos estén expuestos o libres en cada modelo de Pico.
 * Un nombre nuevo crea una salida. Un nombre existente solicita actualizar esa
   salida; compruebe siempre el retorno para no asumir que el cambio fue aceptado.
 * Un PWM nuevo o actualizado no puede utilizar el GPIO reservado por otro PWM.
-* frequencyHz debe ser mayor que cero. periodSteps debe estar entre 1 y 65536.
+* frequencyHz debe ser mayor que cero. periodSteps debe estar entre 1 y 65536 y
+  ambos valores deben producir un divisor PWM entre 1 y 255 15/16.
 * GPIO que comparten slice solo pueden coexistir si ocupan canales diferentes,
   tienen igual frecuencia e igual periodSteps y ninguno exige exclusividad.
 * Para un servo se recomienda un slice exclusivo, 50 Hz y suficientes pasos para
   representar con precisión pulsos de 500 a 2500 microsegundos.
 * Compruebe siempre el código devuelto por registerPwmOutput() y llame a
   validateRegistrationStatus() antes de inicializar las salidas físicas.
-* La clase admite como máximo 8 salidas y conserva hasta 16 intentos de registro.
+* La clase admite como máximo 8 salidas y conserva el último resultado de hasta
+  16 nombres evaluados.
 
 3. INSTANCIACIÓN Y REGISTRO
 ---------------------------
@@ -57,9 +59,10 @@ exclusividad del slice. Un resultado igual a PwmManager::PWM_OK indica éxito.
 
 4. ACTUALIZACIÓN AUTOMÁTICA POR NOMBRE
 --------------------------------------
-registerPwmOutput() es el único método necesario para registrar o actualizar. NAME es el
-identificador estable: si no existe, se agrega una salida; si ya existe, el manager
-intenta reemplazar los datos del mismo slot.
+registerPwmOutput() permite registrar o actualizar. NAME es el identificador
+estable: si no existe, se agrega una salida; si ya existe, el manager intenta
+reemplazar los datos del mismo slot. updatePwmOutput() sirve cuando el llamador
+quiere exigir que el NAME ya exista y evitar una creación accidental.
 
     int firstResult = pwmManager.registerPwmOutput(
         "PUMP", 6, 500, 2000, true
@@ -77,9 +80,11 @@ configuración anterior permanece intacta. Una actualización tampoco incrementa
 cantidad de salidas, incluso cuando el registro ya está lleno.
 
 La búsqueda automática no permite cambiar NAME: para actualizar PUMP se debe usar
-otra vez "PUMP". Un nombre diferente representa una salida nueva. Realice estas
-actualizaciones antes de PwmOutput::init(); un PwmOutput ya inicializado conserva
-la copia anterior y no reconfigura automáticamente el hardware.
+otra vez "PUMP". Un nombre diferente representa una salida nueva. Los PwmOutput
+vivos y ya inicializados con ese NAME reciben automáticamente la
+nueva configuración. Si cambia el GPIO, el canal anterior se pone a cero, el GPIO
+anterior vuelve a SIO como entrada y se deshabilita el slice anterior cuando ya no
+existe otro registro que lo use.
 
 El retorno entero continúa indicando PWM_OK o el error de validación. El parámetro
 opcional action permite distinguir el resultado de esa misma llamada:
@@ -95,7 +100,7 @@ correcta. La forma anterior con cinco argumentos continúa siendo válida.
 ------------------------------------
 MAX_PWM_OUTPUTS (8): máximo de salidas registradas correctamente.
 PWM_NAME_MAX_LENGTH (16): tamaño total del búfer del nombre.
-MAX_PWM_REGISTRATION_ATTEMPTS (16): intentos cuyo resultado puede almacenarse.
+MAX_PWM_VALIDATION_RESULTS (16): nombres cuyo último resultado puede almacenarse.
 
 PWM_OK (0): operación correcta.
 PWM_ERROR_INVALID_NAME (-1): nombre nulo o vacío.
@@ -108,6 +113,8 @@ PWM_ERROR_GPIO_USED (-7): el GPIO ya fue registrado.
 PWM_ERROR_NAME_USED (-8): conflicto de nombre detectado por la validación interna.
 PWM_ERROR_SLICE_CONFLICT (-9): exclusividad o temporización incompatible.
 PWM_ERROR_CHANNEL_CONFLICT (-10): el canal del slice ya está ocupado.
+PWM_ERROR_INVALID_CLOCK_DIVIDER (-11): frecuencia y pasos producen un divisor no
+representable por el hardware PWM.
 
 6. MÉTODOS PÚBLICOS DE PwmManager
 ---------------------------------
@@ -136,9 +143,17 @@ int registerPwmOutput(const char* name, uint gpioPin,
     Si action no es nullptr, informa si el slot fue creado, actualizado o no fue
     modificado por un error.
 
+int updatePwmOutput(const char* name, uint gpioPin,
+                    uint32_t frequencyHz, uint32_t periodSteps,
+                    bool requireExclusiveSlice)
+    Actualiza exclusivamente un NAME que ya existe. Devuelve PWM_ERROR_NOT_FOUND
+    en vez de crear una salida cuando el nombre no está registrado. Aplica las
+    mismas validaciones y actualización automática que registerPwmOutput().
+
 bool validateRegistrationStatus() const
-    Imprime un resumen de todos los intentos guardados. Devuelve true solamente
-    si ninguno falló. No sustituye la comprobación inmediata de cada retorno.
+    Imprime el último resultado guardado para cada nombre evaluado. Devuelve true
+    solamente si ninguno continúa fallando. No sustituye la comprobación inmediata
+    de cada retorno.
 
 int getPwmConfigByName(const char* selectedName,
                        PwmOutputConfig& outputConfig) const
@@ -164,5 +179,7 @@ used: indica que la entrada contiene un registro válido.
 5) hardware_pwm convierte el GPIO a slice y canal.
 6) El manager compara los datos contra todos los demás registros y slices.
 7) Si son compatibles, asigna el slot, calcula wrap y guarda PWM_OK.
-8) Si fallan, guarda el código y no modifica la configuración anterior.
+8) Si fallan, guarda el código y no modifica la configuración anterior. El último
+   resultado de cada NAME reemplaza su resultado previo, por lo que un intento
+   corregido deja de afectar validateRegistrationStatus().
 9) PwmOutput solicita luego esos datos mediante getPwmConfigByName().

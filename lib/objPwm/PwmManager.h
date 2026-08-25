@@ -5,11 +5,13 @@
 
 #include "pico/stdlib.h"
 
+class PwmOutput;
+
 class PwmManager {
 public:
     static constexpr uint MAX_PWM_OUTPUTS = 8;
     static constexpr uint PWM_NAME_MAX_LENGTH = 16;
-    static constexpr uint MAX_PWM_REGISTRATION_ATTEMPTS = 16;
+    static constexpr uint MAX_PWM_VALIDATION_RESULTS = 16;
 
     static constexpr int PWM_OK = 0;
     static constexpr int PWM_ERROR_INVALID_NAME = -1;
@@ -22,6 +24,7 @@ public:
     static constexpr int PWM_ERROR_NAME_USED = -8;
     static constexpr int PWM_ERROR_SLICE_CONFLICT = -9;
     static constexpr int PWM_ERROR_CHANNEL_CONFLICT = -10;
+    static constexpr int PWM_ERROR_INVALID_CLOCK_DIVIDER = -11;
 
     enum class PwmRegistrationAction {
         None,
@@ -66,9 +69,10 @@ public:
     void printPwmMap() const;
 
 private:
+    friend class PwmOutput;
     struct PwmOutputInfo : PwmOutputConfig {};
 
-    struct PwmRegistrationResult {
+    struct PwmValidationResult {
         char name[PWM_NAME_MAX_LENGTH];
         int resultCode;
         bool used;
@@ -76,8 +80,8 @@ private:
 
     PwmOutputInfo outputs[MAX_PWM_OUTPUTS];
     uint outputCount;
-    PwmRegistrationResult registrationResults[MAX_PWM_REGISTRATION_ATTEMPTS];
-    uint registrationResultCount;
+    PwmValidationResult validationResults[MAX_PWM_VALIDATION_RESULTS];
+    uint validationResultCount;
 
     bool textEquals(const char* a, const char* b) const;
     int findPwmOutputIndex(const char* name) const;
@@ -98,6 +102,11 @@ private:
         bool requireExclusiveSlice
     );
     void saveRegistrationResult(const char* name, int resultCode);
+    void attachOutput(PwmOutput* output);
+    void detachOutput(PwmOutput* output);
+    bool sliceIsRegistered(uint sliceNum) const;
+
+    PwmOutput* attachedOutputHead;
 };
 
 #endif

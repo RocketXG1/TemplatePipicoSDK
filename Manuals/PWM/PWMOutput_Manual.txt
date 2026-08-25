@@ -12,7 +12,8 @@ trabajar en pasos, porcentaje de ciclo útil o ángulo de servo.
 ------------------
 * Registre primero el nombre en PwmManager y compruebe los errores.
 * El PwmManager recibido por el constructor debe existir mientras exista la salida.
-* Llame a init() una sola vez por salida y verifique que devuelve PWM_OK.
+* Llame a init() y verifique que devuelve PWM_OK. Las actualizaciones posteriores
+  del mismo NAME se aplican automáticamente mientras ambos objetos sigan vivos.
 * Las órdenes de nivel no hacen nada antes de init(); isInitialized() permite
   comprobar el estado.
 * setDutyPercent() limita automáticamente el valor al intervalo 0..100 %.
@@ -24,6 +25,8 @@ trabajar en pasos, porcentaje de ciclo útil o ángulo de servo.
 * rampPwmUpDown() y sweepServo180() son bloqueantes porque emplean sleep_ms().
 * Un cambio de configuración en un slice afecta a sus dos canales. El manager
   evita parámetros incompatibles, pero inicialice solo registros validados.
+* Si una actualización cambia el GPIO, la salida anterior se pone a nivel cero,
+  vuelve a GPIO_FUNC_SIO como entrada y su slice se deshabilita si queda sin uso.
 
 3. INSTANCIACIÓN
 ----------------
@@ -94,4 +97,3 @@ void sweepServo180(PwmOutput& servo, const char* servoName, uint delayMs)
 
     servo.setServoAngle180(90.0f); // posición central aproximada
     sweepServo180(servo, "SERVO", 20);
-
