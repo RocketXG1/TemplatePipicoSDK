@@ -5,118 +5,85 @@
 
 #include "pico/stdlib.h"
 
+namespace {
+[[noreturn]] void stopWithError(const char* operation, int errorCode) {
+    std::printf("ERROR: %s. Código PWM: %d\n", operation, errorCode);
+    while (true) tight_loop_contents();
+}
+
+void requirePwmOk(int result, const char* operation) {
+    if (result != PwmManager::PWM_OK) stopWithError(operation, result);
+}
+}
+
 int main() {
     stdio_init_all();
     sleep_ms(2000);
 
+    // El manager debe vivir más tiempo que todos los PwmOutput asociados.
     PwmManager pwmManager;
 
-    // Salida independiente para el control de un spindle.
-    pwmManager.registerPwmOutput(
-        "SPINDLE",
-        2,
-        20000,
-        1000,
-        true
+    // 1. Registrar las configuraciones antes de instanciar el hardware.
+    // LIGHT y FAN comparten un slice en los canales A y B, por eso deben usar
+    // exactamente la misma frecuencia y periodSteps y no exigir exclusividad.
+    requirePwmOk(
+        pwmManager.registerPwmOutput("LIGHT", 4, 1000, 1000, false),
+        "registrar LIGHT"
+    );
+    requirePwmOk(
+        pwmManager.registerPwmOutput("FAN", 5, 1000, 1000, false),
+        "registrar FAN"
     );
 
-    // LIGHT y FAN usan los dos canales del mismo slice. Por ello deben tener
-    // exactamente la misma frecuencia y la misma cantidad de periodSteps.
-    pwmManager.registerPwmOutput(
-        "LIGHT",
-        4,
-        1000,
-        1000,
-        false
+    // La bomba y el servo reservan sus slices completos.
+    requirePwmOk(
+        pwmManager.registerPwmOutput("PUMP", 6, 500, 2000, true),
+        "registrar PUMP"
     );
-    pwmManager.registerPwmOutput(
-        "FAN",
-        5,
-        1000,
-        1000,
-        false
+    requirePwmOk(
+        pwmManager.registerPwmOutput("SERVO180", 8, 50, 20000, true),
+        "registrar SERVO180"
     );
 
-    // Salida independiente de menor frecuencia para una bomba.
-    pwmManager.registerPwmOutput(
-        "PUMP",
-        6,
-        500,
-        2000,
-        true
-    );
-
-    // Un servomotor de 180 grados utiliza una señal típica de 50 Hz.
-    pwmManager.registerPwmOutput(
-        "SERVO180",
-        8,
-        50,
-        20000,
-        true
-    );
-
-    std::printf("Mapa PWM antes de actualizar PUMP:\n");
-    pwmManager.printPwmMap();
-
-    // registerPwmOutput detecta automáticamente que PUMP ya existe por su NAME.
-    // Antes de sobrescribirlo, valida estos valores contra los demás PWM.
-    PwmManager::PwmRegistrationAction pumpAction =
-        PwmManager::PwmRegistrationAction::None;
-    const int pumpUpdateResult = pwmManager.registerPwmOutput(
-        "PUMP",
-        6,
-        750,
-        1000,
-        true,
-        &pumpAction
-    );
-    if (pumpUpdateResult != PwmManager::PWM_OK) {
-        std::printf("No fue posible actualizar PUMP. Código: %d\n", pumpUpdateResult);
-        while (true) {
-            tight_loop_contents();
-        }
-    }
-    if (pumpAction == PwmManager::PwmRegistrationAction::Updated) {
-        std::printf("PUMP ya existía y fue actualizado.\n");
-    } else if (pumpAction == PwmManager::PwmRegistrationAction::Registered) {
-        std::printf("PUMP no existía y fue registrado.\n");
-    }
-
-    std::printf("Mapa PWM después de actualizar PUMP:\n");
-    pwmManager.printPwmMap();
     if (!pwmManager.validateRegistrationStatus()) {
-        std::printf("No fue posible registrar todos los PWM.\n");
-        while (true) {
-            tight_loop_contents();
-        }
+        std::printf("ERROR: el mapa PWM contiene configuraciones inválidas.\n");
+        while (true) tight_loop_contents();
     }
+    pwmManager.printPwmMap();
 
-    PwmOutput spindle(pwmManager);
+    // 2. Instanciar cada salida con el manager y enlazarla con su NAME.
     PwmOutput light(pwmManager);
     PwmOutput fan(pwmManager);
     PwmOutput pump(pwmManager);
     PwmOutput servo180(pwmManager);
 
-    if (
-        spindle.init("SPINDLE") != PwmManager::PWM_OK ||
-        light.init("LIGHT") != PwmManager::PWM_OK ||
-        fan.init("FAN") != PwmManager::PWM_OK ||
-        pump.init("PUMP") != PwmManager::PWM_OK ||
-        servo180.init("SERVO180") != PwmManager::PWM_OK
-    ) {
-        std::printf("No fue posible inicializar todos los PWM.\n");
-        while (true) {
-            tight_loop_contents();
-        }
-    }
+    requirePwmOk(light.init("LIGHT"), "inicializar LIGHT");
+    requirePwmOk(fan.init("FAN"), "inicializar FAN");
+    requirePwmOk(pump.init("PUMP"), "inicializar PUMP");
+    requirePwmOk(servo180.init("SERVO180"), "inicializar SERVO180");
 
+    // 3. Una salida ya inicializada se actualiza automáticamente por NAME.
+    // PUMP pasa del GPIO 6 al GPIO 10 y cambia su temporización. Si la validación
+    // es correcta, updatePwmOutput() actualiza `pump`, limpia el GPIO 6 y configura
+    // el GPIO 10 sin volver a llamar pump.init(). Si falla, conserva lo anterior.
+    requirePwmOk(
+        pwmManager.updatePwmOutput("PUMP", 10, 1000, 1000, true),
+        "actualizar PUMP"
+    );
+    std::printf(
+        "PUMP actualizado automáticamente: GPIO=%u, slice=%u, frecuencia=%lu Hz\n",
+        pump.getGpioPin(),
+        pump.getSliceNum(),
+        static_cast<unsigned long>(pump.getFrequencyHz())
+    );
+    pwmManager.printPwmMap();
+
+    // 4. Controlar las salidas usando unidades adecuadas para cada aplicación.
     while (true) {
-        spindle.setDutyPercent(75.0f);
         light.setDutyPercent(35.0f);
         fan.setDutyPercent(60.0f);
         pump.setDutyPercent(50.0f);
 
-        // Mueve el servomotor entre sus posiciones mínima, central y máxima.
         servo180.setServoAngle180(0.0f);
         sleep_ms(1000);
         servo180.setServoAngle180(90.0f);

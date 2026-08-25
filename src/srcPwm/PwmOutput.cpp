@@ -7,9 +7,15 @@
 #include "hardware/clocks.h"
 #include "hardware/pwm.h"
 
-PwmOutput::PwmOutput(const PwmManager& selectedPwmManager)
+PwmOutput::PwmOutput(PwmManager& selectedPwmManager)
     : pwmManager(&selectedPwmManager), name{}, gpioPin(0), sliceNum(0), channel(0), frequencyHz(0),
-      periodSteps(0), wrap(0), clkDiv(0.0f), initialized(false) {}
+      periodSteps(0), wrap(0), clkDiv(0.0f), initialized(false), nextAttached(nullptr) {
+    pwmManager->attachOutput(this);
+}
+
+PwmOutput::~PwmOutput() {
+    if (pwmManager != nullptr) pwmManager->detachOutput(this);
+}
 
 int PwmOutput::init(const char* selectedName) {
     if (pwmManager == nullptr) return PwmManager::PWM_ERROR_NOT_INITIALIZED;
@@ -17,6 +23,23 @@ int PwmOutput::init(const char* selectedName) {
     const int result = pwmManager->getPwmConfigByName(selectedName, config);
     if (result != PwmManager::PWM_OK) return result;
     if (config.frequencyHz == 0 || config.periodSteps == 0 || config.periodSteps > 65536) return PwmManager::PWM_ERROR_INVALID_PERIOD_STEPS;
+
+    applyConfig(config);
+    initialized = true;
+    return PwmManager::PWM_OK;
+}
+
+void PwmOutput::applyConfig(const PwmManager::PwmOutputConfig& config) {
+    const bool gpioChanged = initialized && gpioPin != config.gpioPin;
+    const uint previousSlice = sliceNum;
+    const uint previousChannel = channel;
+    const uint previousGpio = gpioPin;
+
+    if (gpioChanged) {
+        pwm_set_chan_level(previousSlice, previousChannel, 0);
+        gpio_set_function(previousGpio, GPIO_FUNC_SIO);
+        gpio_set_dir(previousGpio, GPIO_IN);
+    }
 
     std::strncpy(name, config.name, PwmManager::PWM_NAME_MAX_LENGTH - 1);
     name[PwmManager::PWM_NAME_MAX_LENGTH - 1] = '\0';
@@ -32,8 +55,15 @@ int PwmOutput::init(const char* selectedName) {
     pwm_set_clkdiv(sliceNum, clkDiv);
     pwm_set_chan_level(sliceNum, channel, 0);
     pwm_set_enabled(sliceNum, true);
-    initialized = true;
-    return PwmManager::PWM_OK;
+    if (gpioChanged && previousSlice != sliceNum && !pwmManager->sliceIsRegistered(previousSlice)) {
+        pwm_set_enabled(previousSlice, false);
+    }
+}
+
+void PwmOutput::refreshIfNamed(const char* updatedName) {
+    if (!initialized || std::strcmp(name, updatedName) != 0) return;
+    PwmManager::PwmOutputConfig config{};
+    if (pwmManager->getPwmConfigByName(updatedName, config) == PwmManager::PWM_OK) applyConfig(config);
 }
 
 bool PwmOutput::isInitialized() const { return initialized; }

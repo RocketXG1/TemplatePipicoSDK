@@ -5,7 +5,11 @@
 
 class PwmOutput {
 public:
-    explicit PwmOutput(const PwmManager& selectedPwmManager);
+    explicit PwmOutput(PwmManager& selectedPwmManager);
+    ~PwmOutput();
+
+    PwmOutput(const PwmOutput&) = delete;
+    PwmOutput& operator=(const PwmOutput&) = delete;
 
     int init(const char* selectedName);
     bool isInitialized() const;
@@ -21,7 +25,9 @@ public:
     void setServoAngle180(float angleDegrees);
 
 private:
-    const PwmManager* pwmManager;
+    friend class PwmManager;
+
+    PwmManager* pwmManager;
     char name[PwmManager::PWM_NAME_MAX_LENGTH];
     uint gpioPin;
     uint sliceNum;
@@ -31,6 +37,10 @@ private:
     uint16_t wrap;
     float clkDiv;
     bool initialized;
+    PwmOutput* nextAttached;
+
+    void applyConfig(const PwmManager::PwmOutputConfig& config);
+    void refreshIfNamed(const char* updatedName);
 };
 
 void rampPwmUpDown(
